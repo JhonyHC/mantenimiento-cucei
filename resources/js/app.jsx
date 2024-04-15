@@ -26,10 +26,13 @@ function DefaultLayout({children}) {
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => {
-        const pages = import.meta.glob("./Pages/**/*.jsx")
+        const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
         let page = pages[`./Pages/${name}.jsx`];
+        console.log(page);
+        page.default.layout = page.default.layout = (page) => (
+            <DefaultLayout children={page} />
+        );
 
-        page.default.layout = (page) => <DefaultLayout children={page} />;
         return page
         // resolvePageComponent(
         //     `./Pages/${name}.jsx`,
@@ -37,6 +40,7 @@ createInertiaApp({
         // );
     },
     setup({ el, App, props }) {
+        console.log({el, App, props});
         const root = createRoot(el);
 
         root.render(<App {...props} />);
