@@ -30,6 +30,7 @@ import {
     IconChevronDown,
 } from "@tabler/icons-react";
 import classes from "./LandingHeader.module.css";
+import { Link } from "@inertiajs/react";
 
 const mockdata = [
     {
@@ -95,12 +96,21 @@ export function LandingHeader() {
         <Box pb={120}>
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
-                    <Title order={2} size="h4">Mantenimiento CUCEI</Title>
+                    <Title order={2} size="h4">
+                        Mantenimiento CUCEI
+                    </Title>
 
-                
                     <Group visibleFrom="sm">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
+                        <Button
+                            component={Link}
+                            variant="default"
+                            href={route("login")}
+                        >
+                            Ingresar
+                        </Button>
+                        <Button component={Link} href={route("register")}>
+                            Registrarse
+                        </Button>
                     </Group>
 
                     <Burger
@@ -123,36 +133,17 @@ export function LandingHeader() {
                 <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
                     <Divider my="sm" />
 
-                    <a href="#" className={classes.link}>
-                        Home
-                    </a>
-                    <UnstyledButton
-                        className={classes.link}
-                        onClick={toggleLinks}
-                    >
-                        <Center inline>
-                            <Box component="span" mr={5}>
-                                Features
-                            </Box>
-                            <IconChevronDown
-                                style={{ width: rem(16), height: rem(16) }}
-                                color={theme.colors.blue[6]}
-                            />
-                        </Center>
-                    </UnstyledButton>
-                    <Collapse in={linksOpened}>{links}</Collapse>
-                    <a href="#" className={classes.link}>
-                        Learn
-                    </a>
-                    <a href="#" className={classes.link}>
-                        Academy
-                    </a>
-
-                    <Divider my="sm" />
-
-                    <Group justify="center" grow pb="xl" px="md">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
+                    <Group justify="center" grow pb="xl" px="md" wrap="wrap">
+                        <Button
+                            component={Link}
+                            variant="default"
+                            href={route("login")}
+                        >
+                            Ingresar
+                        </Button>
+                        <Button component={Link} href={route("register")}>
+                            Registrarse
+                        </Button>
                     </Group>
                 </ScrollArea>
             </Drawer>

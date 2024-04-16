@@ -8,6 +8,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 import { createTheme, MantineProvider } from "@mantine/core";
+import AppLayout from './Layouts/AppLayout';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -15,7 +16,7 @@ const theme = createTheme({
     /** Put your mantine theme override here */
 });
 
-function DefaultLayout({children}) {
+function Mantine({children}) {
     return (
         <MantineProvider theme={theme}>
             {children}
@@ -29,9 +30,9 @@ createInertiaApp({
         const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
         let page = pages[`./Pages/${name}.jsx`];
         console.log(page);
-        page.default.layout = page.default.layout = (page) => (
-            <DefaultLayout children={page} />
-        );
+        page.default.layout = page.default.layout || ((
+            page
+        ) => <Mantine><AppLayout>{page}</AppLayout></Mantine>);
 
         return page
         // resolvePageComponent(
