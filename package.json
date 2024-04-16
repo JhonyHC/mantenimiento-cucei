@@ -3,7 +3,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "prepare": "husky",
+    "format": "prettier 'resources/{js,jsx}/**/*.{js,jsx}' --write",
+    "lint": "eslint --fix .",
+    "pre-commit": "npm run format && lint-staged && pretty-quick --staged"
   },
   "devDependencies": {
     "@headlessui/react": "^1.4.2",
