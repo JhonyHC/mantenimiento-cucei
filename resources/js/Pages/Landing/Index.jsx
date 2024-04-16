@@ -1,12 +1,7 @@
-import {LandingHeader} from './LandingHeader'
+import { LandingHeader } from './LandingHeader';
 
 export default function Index(props) {
-    console.log(props);
+  console.log(props);
 
-    return (
-        <LandingHeader>
-
-        </LandingHeader>
-    )
-
-};
+  return <LandingHeader></LandingHeader>;
+}
