@@ -4,9 +4,9 @@ namespace App;
 
 enum ReportStatus: int
 {
-    case Open = 1;
-    case InProgress = 2;
-    case Solved = 3;
-    case Blocked = 4;
-    case Closed = 5;
+    case OPEN = 1;
+    case IN_PROGRESS = 2;
+    case SOLVED = 3;
+    case BLOCKED = 4;
+    case CLOSED = 5;
 }

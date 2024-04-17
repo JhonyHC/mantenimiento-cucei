@@ -1,48 +1,67 @@
 import { useState } from 'react';
 import { Group, Code } from '@mantine/core';
 import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
   IconLogout,
   IconUserCircle,
+  IconHome,
+  IconReport,
+  IconChecklist,
+  IconBuilding,
 } from '@tabler/icons-react';
 import classes from './SimpleNavBar.module.css';
 import ApplicationLogo from '../ApplicationLogo';
 
 const data = [
-  { link: '', label: 'Notifications', icon: IconBellRinging },
-  { link: '', label: 'Billing', icon: IconReceipt2 },
-  { link: '', label: 'Security', icon: IconFingerprint },
-  { link: '', label: 'SSH Keys', icon: IconKey },
-  { link: '', label: 'Databases', icon: IconDatabaseImport },
-  { link: '', label: 'Authentication', icon: Icon2fa },
-  { link: '', label: 'Other Settings', icon: IconSettings },
+  {
+    link: '',
+    roles: ['admin', 'mantenimiento', 'alumno'],
+    label: 'Inicio',
+    icon: IconHome,
+  },
+  {
+    link: '',
+    roles: ['admin', 'mantenimiento', 'alumno'],
+    label: 'Reportes',
+    icon: IconReport,
+  },
+  {
+    link: '',
+    roles: ['admin', 'mantenimiento'],
+    label: 'Soluciones',
+    icon: IconChecklist,
+  },
+  {
+    link: '',
+    roles: ['admin'],
+    label: 'Infraestructuras',
+    icon: IconBuilding,
+  },
+  //   { link: '', label: 'Databases', icon: IconDatabaseImport },
+  //   { link: '', label: 'Authentication', icon: Icon2fa },
+  //   { link: '', label: 'Other Settings', icon: IconSettings },
 ];
 
-export function SimpleNavBar() {
-  const [active, setActive] = useState('Billing');
+export function SimpleNavBar({ user }) {
+  const [active, setActive] = useState('Inicio');
 
-  const links = data.map(item => (
-    <a
-      className={classes.link}
-      data-active={item.label === active || undefined}
-      href={item.link}
-      key={item.label}
-      onClick={event => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
-  ));
+  const links = data.map(
+    item =>
+      item.roles.includes(user.role) && (
+        <a
+          className={classes.link}
+          data-active={item.label === active || undefined}
+          href={item.link}
+          key={item.label}
+          onClick={event => {
+            event.preventDefault();
+            setActive(item.label);
+          }}
+        >
+          <item.icon className={classes.linkIcon} stroke={1.5} />
+          <span>{item.label}</span>
+        </a>
+      )
+  );
 
   return (
     <nav className={classes.navbar}>
@@ -60,7 +79,7 @@ export function SimpleNavBar() {
           onClick={event => event.preventDefault()}
         >
           <IconUserCircle className={classes.linkIcon} stroke={1.5} />
-          <span>Profle</span>
+          <span>Perfil</span>
         </a>
 
         <a
@@ -69,7 +88,7 @@ export function SimpleNavBar() {
           onClick={event => event.preventDefault()}
         >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+          <span>Cerra sesión</span>
         </a>
       </div>
     </nav>
