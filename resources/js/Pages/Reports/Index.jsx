@@ -1,0 +1,24 @@
+import ReportCard from '@/Components/ReportCard';
+import { Head, Link } from '@inertiajs/react';
+import { Button, Group, Stack, Title } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
+
+export default function Dashboard({ auth, reports }) {
+  return (
+    <>
+      <Head title="Reportes" />
+      <Title order={1} mb={20}>
+        Reportes
+      </Title>
+      <Group justify="end">
+        <Button justify="center" leftSection={<IconPlus size={20} />}>
+          Nuevo
+        </Button>
+      </Group>
+      <Stack spacing="md" my={30}>
+
+        <ReportCard></ReportCard>
+      </Stack>
+    </>
+  );
+}
