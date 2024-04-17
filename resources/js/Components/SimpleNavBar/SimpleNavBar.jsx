@@ -10,28 +10,29 @@ import {
 } from '@tabler/icons-react';
 import classes from './SimpleNavBar.module.css';
 import ApplicationLogo from '../ApplicationLogo';
+import { Link } from '@inertiajs/react';
 
 const data = [
   {
-    link: '',
+    link: route('dashboard'),
     roles: ['admin', 'mantenimiento', 'alumno'],
     label: 'Inicio',
     icon: IconHome,
   },
   {
-    link: '',
+    link: route('reports.index'),
     roles: ['admin', 'mantenimiento', 'alumno'],
     label: 'Reportes',
     icon: IconReport,
   },
   {
-    link: '',
+    link: route('solutions.index'),
     roles: ['admin', 'mantenimiento'],
     label: 'Soluciones',
     icon: IconChecklist,
   },
   {
-    link: '',
+    link: route('infrastructures.index'),
     roles: ['admin'],
     label: 'Infraestructuras',
     icon: IconBuilding,
@@ -47,7 +48,7 @@ export function SimpleNavBar({ user }) {
   const links = data.map(
     item =>
       item.roles.includes(user.role) && (
-        <a
+        <Link
           className={classes.link}
           data-active={item.label === active || undefined}
           href={item.link}
@@ -59,7 +60,7 @@ export function SimpleNavBar({ user }) {
         >
           <item.icon className={classes.linkIcon} stroke={1.5} />
           <span>{item.label}</span>
-        </a>
+        </Link>
       )
   );
 
@@ -73,23 +74,20 @@ export function SimpleNavBar({ user }) {
       </div>
 
       <div className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={event => event.preventDefault()}
-        >
+        <Link href={route('profile.edit')} className={classes.link}>
           <IconUserCircle className={classes.linkIcon} stroke={1.5} />
           <span>Perfil</span>
-        </a>
+        </Link>
 
-        <a
-          href="#"
-          className={classes.link}
-          onClick={event => event.preventDefault()}
+        <Link
+          as="button"
+          href={route('logout')}
+          method="post"
+          className={classes.link + ' w-full'}
         >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Cerra sesión</span>
-        </a>
+        </Link>
       </div>
     </nav>
   );

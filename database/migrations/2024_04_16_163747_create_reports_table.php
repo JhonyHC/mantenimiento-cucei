@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('infrastructure_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('solver_id')->nullable()->constrained(table: 'users', indexName: 'solver_user_id')->nullOnDelete();
             $table->string('title');
             $table->string('description');
             $table->integer('status')->default(1);

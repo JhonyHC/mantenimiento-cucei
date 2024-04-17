@@ -96,7 +96,7 @@ export function LandingHeader() {
     <Box pb={120}>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <Title order={2} size="h4">
+          <Title order={2} size="h3">
             Mantenimiento CUCEI
           </Title>
 

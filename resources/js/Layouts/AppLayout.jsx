@@ -23,7 +23,7 @@ export default function AppLayout({ children }) {
       }}
       padding="md"
     >
-      <AppShell.Header>
+      <AppShell.Header hiddenFrom='sm'>
         <Group align="center" mt={5} ml={10}>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <ApplicationLogo />
