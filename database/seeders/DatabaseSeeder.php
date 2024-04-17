@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
 
 
         //Infrastructures
-        Infrastructure::factory()->create([
+        Infrastructure::create([
             'name' => 'Otros',
             'description' => 'Para infraestructuras que no se encuentran en el sistema o son muy especificas'
         ]);

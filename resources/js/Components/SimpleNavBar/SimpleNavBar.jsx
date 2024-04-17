@@ -10,6 +10,7 @@ import {
   IconReceipt2,
   IconSwitchHorizontal,
   IconLogout,
+  IconUserCircle,
 } from '@tabler/icons-react';
 import classes from './SimpleNavBar.module.css';
 import ApplicationLogo from '../ApplicationLogo';
@@ -48,7 +49,6 @@ export function SimpleNavBar() {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           <ApplicationLogo />
-          <Code fw={700}>v3.1.2</Code>
         </Group>
         {links}
       </div>
@@ -59,8 +59,8 @@ export function SimpleNavBar() {
           className={classes.link}
           onClick={event => event.preventDefault()}
         >
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
+          <IconUserCircle className={classes.linkIcon} stroke={1.5} />
+          <span>Profle</span>
         </a>
 
         <a

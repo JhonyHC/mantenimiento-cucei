@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->nullOnDelete();
-            $table->foreignId('infrastructure_id')->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('infrastructure_id')->nullable()->constrained()->nullOnDelete();
             $table->string('title');
             $table->string('description');
             $table->integer('status')->default(1);

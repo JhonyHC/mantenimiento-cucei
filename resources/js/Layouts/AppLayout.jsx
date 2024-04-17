@@ -8,7 +8,10 @@ export default function AppLayout({ children, ...props }) {
   console.log(props);
   return (
     <AppShell
-      header={{ height: 50 }}
+      header={{ height: {
+        base: 50,
+        sm: 0,
+      }, breakpoint: 0 }}
       navbar={{
         width: 300,
         breakpoint: 'sm',
@@ -23,7 +26,7 @@ export default function AppLayout({ children, ...props }) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar>
         <SimpleNavBar></SimpleNavBar>
       </AppShell.Navbar>
 

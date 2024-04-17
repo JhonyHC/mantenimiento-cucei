@@ -24,12 +24,18 @@ createInertiaApp({
   resolve: name => {
     const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true });
     let page = pages[`./Pages/${name}.jsx`];
-    console.log(page);
+    console.log(page, name);
     page.default.layout =
       page.default.layout ||
       (page => (
         <Mantine>
-          <AppLayout>{page}</AppLayout>
+          {name.startsWith('Landing/') ||
+          name.startsWith('Auth/') ||
+          name.startsWith('Profile') ? (
+            page
+          ) : (
+            <AppLayout>{page}</AppLayout>
+          )}
         </Mantine>
       ));
 
