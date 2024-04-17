@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('solutions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('report_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->nullOnDelete();
+            $table->string('description');
+            $table->dateTime('solved_at');
             $table->timestamps();
         });
     }

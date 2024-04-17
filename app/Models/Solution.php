@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Solution extends Model
 {
     use HasFactory;
+
+
+    public function evidences()
+    {
+        return $this->morphMany(Evidence::class, 'evidenceable');
+    }
 }

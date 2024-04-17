@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Infrastructure;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -52,7 +53,11 @@ class DatabaseSeeder extends Seeder
 
 
 
-
+        //Infrastructures
+        Infrastructure::factory()->create([
+            'name' => 'Otros',
+            'description' => 'Para infraestructuras que no se encuentran en el sistema o son muy especificas'
+        ]);
 
 
 
