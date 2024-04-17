@@ -29,9 +29,7 @@ createInertiaApp({
       page.default.layout ||
       (page => (
         <Mantine>
-          {name.startsWith('Landing/') ||
-          name.startsWith('Auth/') ||
-          name.startsWith('Profile') ? (
+          {name.startsWith('Landing/') || name.startsWith('Auth/') ? (
             page
           ) : (
             <AppLayout>{page}</AppLayout>

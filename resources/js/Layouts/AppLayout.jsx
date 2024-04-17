@@ -6,7 +6,10 @@ import { useDisclosure } from '@mantine/hooks';
 
 export default function AppLayout({ children }) {
   const [opened, { toggle }] = useDisclosure();
-  const { auth } = usePage().props;
+  const {
+    props: { auth },
+    url,
+  } = usePage();
   return (
     <AppShell
       header={{
@@ -23,7 +26,7 @@ export default function AppLayout({ children }) {
       }}
       padding="md"
     >
-      <AppShell.Header hiddenFrom='sm'>
+      <AppShell.Header hiddenFrom="sm">
         <Group align="center" mt={5} ml={10}>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <ApplicationLogo />
@@ -31,7 +34,7 @@ export default function AppLayout({ children }) {
       </AppShell.Header>
 
       <AppShell.Navbar>
-        <SimpleNavBar user={auth.user}></SimpleNavBar>
+        <SimpleNavBar user={auth?.user} currentPageUrl={url}></SimpleNavBar>
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

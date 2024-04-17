@@ -42,21 +42,17 @@ const data = [
   //   { link: '', label: 'Other Settings', icon: IconSettings },
 ];
 
-export function SimpleNavBar({ user }) {
-  const [active, setActive] = useState('Inicio');
-
+export function SimpleNavBar({ user, currentPageUrl }) {
   const links = data.map(
     item =>
       item.roles.includes(user.role) && (
         <Link
           className={classes.link}
-          data-active={item.label === active || undefined}
+          data-active={
+            new URL(item.link).pathname === currentPageUrl || undefined
+          }
           href={item.link}
           key={item.label}
-          onClick={event => {
-            event.preventDefault();
-            setActive(item.label);
-          }}
         >
           <item.icon className={classes.linkIcon} stroke={1.5} />
           <span>{item.label}</span>
@@ -74,7 +70,11 @@ export function SimpleNavBar({ user }) {
       </div>
 
       <div className={classes.footer}>
-        <Link href={route('profile.edit')} className={classes.link}>
+        <Link
+          href={route('profile.edit')}
+          className={classes.link}
+          data-active={'/profile' === currentPageUrl || undefined}
+        >
           <IconUserCircle className={classes.linkIcon} stroke={1.5} />
           <span>Perfil</span>
         </Link>
