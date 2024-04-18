@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Button, Group, Stack, Title } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 
-export default function Dashboard({ auth, reports }) {
+export default function Dashboard({ auth, reports, can }) {
   return (
     <>
       <Head title="Reportes" />
@@ -11,13 +11,26 @@ export default function Dashboard({ auth, reports }) {
         Reportes
       </Title>
       <Group justify="end">
-        <Button justify="center" leftSection={<IconPlus size={20} />}>
-          Nuevo
-        </Button>
+        {can.create && (
+          <Button
+            component={Link}
+            href={route('reports.create')}
+            justify="center"
+            leftSection={<IconPlus size={20} />}
+          >
+            Nuevo
+          </Button>
+        )}
       </Group>
       <Stack spacing="md" my={30}>
-
-        <ReportCard></ReportCard>
+        {reports.length === 0 ? (
+          <p>No hay reportes</p>
+        ) : (
+          reports.map(report => {
+            return <ReportCard key={report.id} report={report}></ReportCard>;
+          })
+        )}
+        {/* <ReportCard></ReportCard> */}
       </Stack>
     </>
   );

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Report;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
+use App\Enums\ReportStatus;
 
 class ReportController extends Controller
 {
@@ -14,7 +15,19 @@ class ReportController extends Controller
     public function index()
     {
         return inertia('Reports/Index', [
-            'reports' => Report::all(),
+            'reports' => Report::with('user')->whereIn('status', [ReportStatus::OPEN, ReportStatus::IN_PROGRESS])->latest()->get()->map(function ($report) {
+                return [
+                    'id' => $report->id,
+                    'title' => $report->title,
+                    'status' => $report->status,
+                    'status_label' => ReportStatus::getDescription($report->status),
+                    'created_at' => $report->created_at->format('d/m/Y'),
+                    'user' => $report->user->only('name'),
+                ];
+            }),
+            'can' => [
+                'create' => auth()->user()->can('create', Report::class),
+            ],
         ]);
     }
 
@@ -23,7 +36,7 @@ class ReportController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Reports/Create');
     }
 
     /**

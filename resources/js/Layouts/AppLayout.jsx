@@ -6,10 +6,9 @@ import { useDisclosure } from '@mantine/hooks';
 
 export default function AppLayout({ children }) {
   const [opened, { toggle }] = useDisclosure();
-  const {
-    props: { auth },
-    url,
-  } = usePage();
+  const { props, url } = usePage();
+  const auth = props.auth;
+  console.log(props);
   return (
     <AppShell
       header={{

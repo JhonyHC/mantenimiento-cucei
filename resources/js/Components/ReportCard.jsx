@@ -58,7 +58,11 @@ export default function ReportCard({ report }) {
           </Text>
         </Group>
         <Group>
-          <Button component={Link} href={route('reports.show', 1)} color='orange'>
+          <Button
+            component={Link}
+            href={route('reports.show', 1)}
+            color="orange"
+          >
             Agregar importancia
           </Button>
           <Button component={Link} href={route('reports.show', 1)}>

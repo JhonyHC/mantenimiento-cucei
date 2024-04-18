@@ -29,7 +29,7 @@ class ReportPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->hasRole(['admin', 'alumno']);
     }
 
     /**
@@ -37,7 +37,10 @@ class ReportPolicy
      */
     public function update(User $user, Report $report): bool
     {
-        //
+        if ($user->id === $report->user_id) {
+            return Response::allow();
+        }
+        return $user->hasRole(['admin']);
     }
 
     /**
@@ -45,7 +48,10 @@ class ReportPolicy
      */
     public function delete(User $user, Report $report): bool
     {
-        //
+        if ($user->id === $report->user_id) {
+            return Response::allow();
+        }
+        return $user->hasRole(['admin']);
     }
 
     /**
