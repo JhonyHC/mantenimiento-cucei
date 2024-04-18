@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use App\Enums\ReportStatus;
+use App\Models\Infrastructure;
 
 class ReportController extends Controller
 {
@@ -36,7 +37,14 @@ class ReportController extends Controller
      */
     public function create()
     {
-        return inertia('Reports/Create');
+        return inertia('Reports/Create', [
+            'infrastructures' => Infrastructure::select('id', 'name')->get()->map(function ($infrastructure) {
+                return [
+                    'value' => $infrastructure->id,
+                    'label' => $infrastructure->name,
+                ];
+            }),
+        ]);
     }
 
     /**
