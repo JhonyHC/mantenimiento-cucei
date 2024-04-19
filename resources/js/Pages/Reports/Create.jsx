@@ -1,6 +1,6 @@
 import { DropzoneButton } from '@/Components/Dropzone/DropzoneButton';
 import AppLayout from '@/Layouts/AppLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import {
   Button,
   Fieldset,
@@ -8,6 +8,7 @@ import {
   NativeSelect,
   SimpleGrid,
   Stack,
+  Text,
   TextInput,
   Textarea,
   Title,
@@ -15,11 +16,16 @@ import {
 import { useEffect, useState } from 'react';
 
 export default function Create({ auth, infrastructures }) {
-  const [files, setFiles] = useState([]);
+  const { data, setData, post, processing, errors, setError, clearErrors } =
+    useForm({
+      title: '',
+      description: '',
+      infrastructure_id: '1',
+      files: [],
+    });
 
-  const previews = files.map((file, index) => {
+  const previews = data.files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file);
-    console.log(file);
     return (
       <Image
         key={index}
@@ -30,8 +36,14 @@ export default function Create({ auth, infrastructures }) {
   });
 
   useEffect(() => {
-    return () => files.forEach(file => URL.revokeObjectURL(file.preview));
+    return () => data.files.forEach(file => URL.revokeObjectURL(file.preview));
   }, []);
+
+  function submit(e) {
+    e.preventDefault();
+    clearErrors();
+    post(route('reports.store'));
+  }
 
   return (
     <>
@@ -39,20 +51,62 @@ export default function Create({ auth, infrastructures }) {
       <Title order={1} mb={20}>
         Crear Reporte
       </Title>
-      <Stack component="form" maw="66%">
-        <TextInput label="Titulo" required />
-        <Textarea label="Descripción" required />
-        <NativeSelect label="Infraestructura" data={infrastructures} required />
+      <Stack component="form" maw="66%" onSubmit={submit}>
+        <TextInput
+          label="Titulo"
+          value={data.title}
+          onChange={e => setData('title', e.target.value)}
+          error={errors.title}
+          required
+        />
+        <Textarea
+          label="Descripción"
+          value={data.description}
+          onChange={e => setData('description', e.target.value)}
+          error={errors.description}
+          required
+        />
+        <NativeSelect
+          label="Infraestructura"
+          value={data.infrastructure_id}
+          onChange={e => {
+            console.log(e.currentTarget.value, e.target.value);
+            setData('infrastructure_id', e.currentTarget.value);
+          }}
+          data={infrastructures}
+          error={errors.infrastructure_id}
+          required
+        />
         <Fieldset legend="Subir evidencias *">
-          <DropzoneButton setFiles={setFiles} />
+          <DropzoneButton setData={setData} setError={setError} />
           <SimpleGrid
             cols={{ base: 1, sm: 3 }}
             mt={previews.length > 0 ? 'xl' : 0}
           >
             {previews}
           </SimpleGrid>
+          <Stack mt="xs">
+            {Array.isArray(errors.files) ? (
+              errors.files.map(file => (
+                <Text c="red" key={file.path}>
+                  El archivo {file.file.name} tiene los siguientes errores:{' '}
+                  <ul>
+                    {file.errors.map((error, index) => (
+                      <li key={`error-${index}-${error.code}`}>
+                        {error.message}
+                      </li>
+                    ))}
+                  </ul>{' '}
+                </Text>
+              ))
+            ) : (
+              <Text c="red">{errors.files}</Text>
+            )}
+          </Stack>
         </Fieldset>
-        <Button>Crear</Button>
+        <Button type="submit" disabled={processing}>
+          Crear
+        </Button>
       </Stack>
     </>
   );

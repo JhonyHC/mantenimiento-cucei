@@ -11,7 +11,7 @@ import { Dropzone, IMAGE_MIME_TYPE, MIME_TYPES } from '@mantine/dropzone';
 import { IconCloudUpload, IconX, IconDownload } from '@tabler/icons-react';
 import classes from './DropzoneButton.module.css';
 
-export function DropzoneButton({ setFiles }) {
+export function DropzoneButton({ setData, setError }) {
   const theme = useMantineTheme();
   const openRef = useRef(null);
 
@@ -19,7 +19,15 @@ export function DropzoneButton({ setFiles }) {
     <div className={classes.wrapper}>
       <Dropzone
         openRef={openRef}
-        onDrop={setFiles}
+        onDrop={files => {
+          setData('files', files);
+        }}
+        onReject={files => {
+          setError('files', files);
+          console.log('rejected files', files);
+        }}
+        onDragEnter={() => setError('files', '')}
+        onFileDialogOpen={() => setError('files', '')}
         className={classes.dropzone}
         radius="md"
         accept={IMAGE_MIME_TYPE}

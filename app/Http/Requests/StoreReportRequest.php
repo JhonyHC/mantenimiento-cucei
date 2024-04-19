@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Report;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\File;
 
 class StoreReportRequest extends FormRequest
 {
@@ -11,7 +15,7 @@ class StoreReportRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', Report::class);
     }
 
     /**
@@ -21,8 +25,13 @@ class StoreReportRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd($this, $this->all(), $this->files, $this->files->all());
         return [
-            //
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'infrastructure_id' => 'required|exists:infrastructures,id',
+            'files' => ['required', 'array', 'min:1', 'max:5'],
+            'files.*' => [File::image()->max('5mb')],
         ];
     }
 }
