@@ -22,6 +22,7 @@ export default function Create({ auth, infrastructures }) {
       description: '',
       infrastructure_id: '1',
       files: [],
+      evidence_description: '',
     });
 
   const previews = data.files.map((file, index) => {
@@ -103,6 +104,12 @@ export default function Create({ auth, infrastructures }) {
               <Text c="red">{errors.files}</Text>
             )}
           </Stack>
+          <Textarea
+            label="Descripción de la evidencia"
+            value={data.evidence_description}
+            onChange={e => setData('evidence_description', e.target.value)}
+            error={errors.evidence_description}
+          />
         </Fieldset>
         <Button type="submit" disabled={processing}>
           Crear

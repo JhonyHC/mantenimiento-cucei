@@ -30,6 +30,7 @@ class StoreReportRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'infrastructure_id' => 'required|exists:infrastructures,id',
+            'evidence_description' => 'nullable|string|max:255',
             'files' => ['required', 'array', 'min:1', 'max:5'],
             'files.*' => [File::image()->max('5mb')],
         ];

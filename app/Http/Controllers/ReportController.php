@@ -52,7 +52,18 @@ class ReportController extends Controller
      */
     public function store(StoreReportRequest $request)
     {
-        dd($request->all(), $request);
+        dd($request->all(), $request->file('files'));
+        $report = $request->user()->reports()->create($request->except('files'));
+
+        $report->evidences()->createMany(
+            collect($request->file('files'))->map(function ($file) {
+                return [
+                    'path' => $file->store('evidences'),
+                ];
+            })->toArray()
+        );
+
+        return redirect()->route('reports.index');
     }
 
     /**

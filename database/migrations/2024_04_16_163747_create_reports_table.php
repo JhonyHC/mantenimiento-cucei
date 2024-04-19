@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->integer('status')->default(1);
             $table->integer('importance')->default(0);
+            $table->string('evidence_description')->nullable();
             $table->timestamps();
         });
     }
