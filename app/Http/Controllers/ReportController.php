@@ -52,7 +52,6 @@ class ReportController extends Controller
      */
     public function store(StoreReportRequest $request)
     {
-        dd($request->all(), $request->file('files'));
         $report = $request->user()->reports()->create($request->except('files'));
 
         $report->evidences()->createMany(

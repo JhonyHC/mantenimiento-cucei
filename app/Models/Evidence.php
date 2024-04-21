@@ -10,6 +10,8 @@ class Evidence extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['path'];
+
     public function evidenceable(): MorphTo
     {
         return $this->morphTo();

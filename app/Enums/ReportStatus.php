@@ -13,11 +13,11 @@ enum ReportStatus: int
     public static function getDescription(int $status): string
     {
         return match ($status) {
-            self::OPEN => 'Abierto',
-            self::IN_PROGRESS => 'En progreso',
-            self::SOLVED => 'Resuelto',
-            self::BLOCKED => 'Bloqueado',
-            self::CLOSED => 'Cerrado',
+            self::OPEN->value => 'Abierto',
+            self::IN_PROGRESS->value => 'En progreso',
+            self::SOLVED->value => 'Resuelto',
+            self::BLOCKED->value => 'Bloqueado',
+            self::CLOSED->value => 'Cerrado',
         };
     }
 }

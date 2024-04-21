@@ -16,6 +16,7 @@ class Report extends Model
         'description',
         'status',
         'importance',
+        'infrastructure_id',
     ];
 
     protected $attributes = [

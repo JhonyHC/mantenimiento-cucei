@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('evidence', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
+            $table->string('path');
             $table->unsignedBigInteger('evidenceable_id');
             $table->string('evidenceable_type');
             $table->timestamps();
