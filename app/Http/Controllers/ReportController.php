@@ -7,6 +7,8 @@ use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use App\Enums\ReportStatus;
 use App\Models\Infrastructure;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
@@ -22,8 +24,9 @@ class ReportController extends Controller
                     'title' => $report->title,
                     'status' => $report->status,
                     'status_label' => ReportStatus::getDescription($report->status),
-                    'created_at' => $report->created_at->format('d/m/Y'),
-                    'user' => $report->user->only('name'),
+                    'created_at' => $report->created_at,
+                    'user' => $report->user->only('id', 'name'),
+                    'infrastructure' => $report->infrastructure?->only('name'),
                 ];
             }),
             'can' => [
@@ -94,6 +97,16 @@ class ReportController extends Controller
      */
     public function destroy(Report $report)
     {
-        //
+        Gate::authorize('delete', $report);
+
+        //Delete evidences
+        $report->evidences->each(function ($evidence) {
+            Storage::delete($evidence->path);
+            $evidence->delete();
+        });
+
+        $report->delete();
+
+        return redirect()->route('reports.index');
     }
 }

@@ -14,4 +14,21 @@ export default class ReportStatus {
   static get CLOSED() {
     return 5;
   }
+
+  static getDescriptions(status) {
+    switch (status) {
+      case this.OPEN:
+        return 'Pendiente';
+      case this.IN_PROGRESS:
+        return 'En progreso';
+      case this.SOLVED:
+        return 'Resuelto';
+      case this.BLOCKED:
+        return 'Bloqueado';
+      case this.CLOSED:
+        return 'Cerrado';
+      default:
+        return 'Desconocido';
+    }
+  }
 }

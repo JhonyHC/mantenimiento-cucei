@@ -4,6 +4,8 @@ import { Button, Group, Stack, Title } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 
 export default function Dashboard({ auth, reports, can }) {
+
+    console.log(reports);
   return (
     <>
       <Head title="Reportes" />

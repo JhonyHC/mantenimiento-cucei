@@ -33,4 +33,9 @@ class Report extends Model
     {
         return $this->morphMany(Evidence::class, 'evidenceable');
     }
+
+    public function infrastructure(): BelongsTo
+    {
+        return $this->belongsTo(Infrastructure::class);
+    }
 }
