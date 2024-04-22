@@ -105,12 +105,12 @@ export default function Create({ auth, infrastructures }) {
             )}
           </Stack>
         </Fieldset>
-          <Textarea
-            label="Descripción de la evidencia"
-            value={data.evidence_description}
-            onChange={e => setData('evidence_description', e.target.value)}
-            error={errors.evidence_description}
-          />
+        <Textarea
+          label="Descripción de la evidencia"
+          value={data.evidence_description}
+          onChange={e => setData('evidence_description', e.target.value)}
+          error={errors.evidence_description}
+        />
         <Button type="submit" disabled={processing}>
           Crear
         </Button>

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateReportRequest;
 use App\Enums\ReportStatus;
 use App\Models\Infrastructure;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
@@ -18,15 +19,18 @@ class ReportController extends Controller
     public function index()
     {
         return inertia('Reports/Index', [
-            'reports' => Report::with('user')->whereIn('status', [ReportStatus::OPEN, ReportStatus::IN_PROGRESS])->latest()->get()->map(function ($report) {
+            'reports' => Report::withCount('importance')->with('user')->whereIn('status', [ReportStatus::OPEN, ReportStatus::IN_PROGRESS])->latest()->get()->map(function ($report) {
                 return [
                     'id' => $report->id,
                     'title' => $report->title,
+                    'description' => $report->description,
                     'status' => $report->status,
                     'status_label' => ReportStatus::getDescription($report->status),
                     'created_at' => $report->created_at,
                     'user' => $report->user->only('id', 'name'),
                     'infrastructure' => $report->infrastructure?->only('name'),
+                    'importance_added' => $report->user_added_importance,
+                    'importance' => $report->importance_count,
                 ];
             }),
             'can' => [
@@ -108,5 +112,17 @@ class ReportController extends Controller
         $report->delete();
 
         return redirect()->route('reports.index');
+    }
+
+    /**
+     * Toggle the importance of the report.
+     */
+    public function toggleImportance(Report $report)
+    {
+        Gate::authorize('toggleImportance', $report);
+
+        $report->importance()->toggle([auth()->id()]);
+
+        return redirect()->back();
     }
 }

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/reports/{report}/importance', [ReportController::class, 'toggleImportance'])->name('reports.importance');
     Route::resource('reports', ReportController::class);
     Route::resource('solutions', SolutionController::class)->middleware('role:admin|mantenimiento');
     Route::resource('infrastructures', InfrastructureController::class)->middleware('role:admin');

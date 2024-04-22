@@ -69,4 +69,12 @@ class ReportPolicy
     {
         //
     }
+
+    /**
+     * Determine whether the user can toggle the importance of the model.
+     */
+    public function toggleImportance(User $user, Report $report): bool
+    {
+        return $user->hasAnyRole(['admin', 'alumno']);
+    }
 }
