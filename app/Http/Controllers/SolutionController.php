@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportStatus;
+use App\Models\Report;
 use App\Models\Solution;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,25 @@ class SolutionController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Solutions/Index', [
+            'reports' => Report::with('user', 'solution')->where('status', ReportStatus::SOLVED)->get()->map(function ($report) {
+                return [
+                    'id' => $report->id,
+                    'title' => $report->title,
+                    'status' => $report->status,
+                    'status_label' => ReportStatus::getDescription($report->status),
+                    'created_at' => $report->created_at,
+                    'user' => $report->user->only('id', 'name'),
+                    'infrastructure' => $report->infrastructure?->only('name'),
+                    'description' => $report->solution->description,
+                    'solved_at' => $report->solution->solved_at,
+                    'solver' => $report->solution->solver->only('id', 'name'),
+                ];
+            }),
+            'can' => [
+                'create' => auth()->user()->can('create', Solution::class),
+            ],
+        ]);
     }
 
     /**

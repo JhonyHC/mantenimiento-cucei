@@ -64,4 +64,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Report::class, 'report_importance');
     }
+
+    /**
+     * Get the solutions for the user.
+     */
+    public function solutions(): HasMany
+    {
+        return $this->hasMany(Solution::class);
+    }
 }

@@ -107,7 +107,7 @@ export default function ReportCard({ report }) {
             color="red"
           >
             <Button
-              variant="subtle"
+              variant={report.importance_added ? 'light' : 'subtle'}
               color="red"
               loading={addingImportance}
               leftSection={
