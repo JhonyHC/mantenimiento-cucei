@@ -1,4 +1,4 @@
-import { CardsCarousel } from '@/Components/CardsCarousel.jx/CardsCarousel';
+import { CardsCarousel } from '@/Components/CardsCarousel/CardsCarousel';
 import ReportStatus from '@/Utils/ReportStatus';
 import { Head, Link, router } from '@inertiajs/react';
 import {

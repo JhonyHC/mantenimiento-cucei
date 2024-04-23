@@ -12,7 +12,9 @@ class InfrastructureController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Infrastructures/Index', [
+            'infrastructures' => Infrastructure::select('id', 'name', 'description')->get()
+        ]);
     }
 
     /**
@@ -20,7 +22,7 @@ class InfrastructureController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Infrastructures/Create');
     }
 
     /**
@@ -28,7 +30,15 @@ class InfrastructureController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->user()->can('create', Infrastructure::class);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:infrastructures',
+            'description' => 'required|string|max:255',
+        ]);
+
+        Infrastructure::create($validated);
+
+        return redirect()->route('infrastructures.index');
     }
 
     /**
@@ -36,7 +46,7 @@ class InfrastructureController extends Controller
      */
     public function show(Infrastructure $infrastructure)
     {
-        //
+
     }
 
     /**
@@ -44,7 +54,9 @@ class InfrastructureController extends Controller
      */
     public function edit(Infrastructure $infrastructure)
     {
-        //
+        return inertia('Infrastructures/Create', [
+            'infrastructure' => $infrastructure->only('id', 'name', 'description')
+        ]);
     }
 
     /**
@@ -52,7 +64,14 @@ class InfrastructureController extends Controller
      */
     public function update(Request $request, Infrastructure $infrastructure)
     {
-        //
+        $request->user()->can('update', Infrastructure::class);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:infrastructures,name,' . $infrastructure->id,
+            'description' => 'required|string|max:255',
+        ]);
+        $infrastructure->update($validated);
+
+        return redirect()->route('infrastructures.index');
     }
 
     /**
