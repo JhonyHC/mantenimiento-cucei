@@ -130,7 +130,7 @@ export default function ReportCard({ report }) {
           >
             Agregar importancia
           </Button> */}
-          <Button component={Link} href={route('reports.show', 1)}>
+          <Button component={Link} href={route('reports.show', report.id)}>
             Ver detalles
           </Button>
         </Group>

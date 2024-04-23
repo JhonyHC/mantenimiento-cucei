@@ -77,7 +77,19 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
-        //
+        // Gate::authorize('view', $report);
+        $report->load('user:id,name', 'infrastructure:id,name', 'evidences:id,path,evidenceable_id,evidenceable_type');
+        $report->loadCount('importance as importance');
+        //Añade el atributo user_added_importance al modelo
+        $report->importance_added = $report->user_added_importance;
+        return inertia('Reports/Show', [
+            'report' => $report,
+            // 'can' => [
+            //     'update' => auth()->user()->can('update', $report),
+            //     'delete' => auth()->user()->can('delete', $report),
+            //     'toggleImportance' => auth()->user()->can('toggleImportance', $report),
+            // ],
+        ]);
     }
 
     /**

@@ -18,7 +18,7 @@ export default class ReportStatus {
   static getDescriptions(status) {
     switch (status) {
       case this.OPEN:
-        return 'Pendiente';
+        return 'Abierto';
       case this.IN_PROGRESS:
         return 'En progreso';
       case this.SOLVED:

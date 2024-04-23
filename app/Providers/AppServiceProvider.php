@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         //Gates
 
         Gate::before(function ($user) {
-            if ($user->roles()->first()->name === 'admin') {
+            if ($user->roles->first()->name === 'admin') {
                 return true;
             }
         });

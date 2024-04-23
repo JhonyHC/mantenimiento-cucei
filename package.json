@@ -39,11 +39,13 @@
     "vite": "^5.0"
   },
   "dependencies": {
+    "@mantine/carousel": "^7.8.0",
     "@mantine/core": "^7.8.0",
     "@mantine/dropzone": "^7.8.0",
     "@mantine/hooks": "^7.8.0",
     "@tabler/icons-react": "^3.2.0",
-    "dayjs": "^1.11.10"
+    "dayjs": "^1.11.10",
+    "embla-carousel-react": "^7.1.0"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix"

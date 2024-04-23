@@ -32,7 +32,7 @@ export function DropzoneButton({ setData, setError }) {
         radius="md"
         accept={IMAGE_MIME_TYPE}
         maxSize={5 * 1024 ** 2}
-        maxFiles={7}
+        maxFiles={5}
       >
         <div style={{ pointerEvents: 'none' }}>
           <Group justify="center">
