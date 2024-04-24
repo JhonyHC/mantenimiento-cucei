@@ -1,6 +1,6 @@
 import { DropzoneButton } from '@/Components/Dropzone/DropzoneButton';
 import AppLayout from '@/Layouts/AppLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import {
   Button,
   Fieldset,
@@ -13,16 +13,17 @@ import {
   Textarea,
   Title,
 } from '@mantine/core';
+import { DateTimePicker } from '@mantine/dates';
 import { useEffect, useState } from 'react';
 
-export default function Create({ auth, infrastructures }) {
+export default function Create({ auth, reports }) {
+  console.log(reports);
   const { data, setData, post, processing, errors, setError, clearErrors } =
     useForm({
-      title: '',
       description: '',
-      infrastructure_id: '1',
+      report_id: '1',
+      solved_at: '',
       files: [],
-      evidence_description: '',
     });
 
   const previews = data.files.map((file, index) => {
@@ -43,42 +44,42 @@ export default function Create({ auth, infrastructures }) {
   function submit(e) {
     e.preventDefault();
     clearErrors();
-    post(route('reports.store'));
+    post(route('solutions.store'));
   }
 
   return (
     <>
-      <Head title="Crear Reporte" />
+      <Head title="Crear Solución" />
       <Title order={1} mb={20}>
-        Crear Reporte
+        Crear Solución
       </Title>
       <Stack component="form" maw="66%" onSubmit={submit}>
-        <TextInput
-          label="Titulo"
-          value={data.title}
-          onChange={e => setData('title', e.target.value)}
-          error={errors.title}
-          required
-        />
         <Textarea
           label="Descripción"
           value={data.description}
+          placeholder="Descripción de la solución del problema y de la evidencia"
           onChange={e => setData('description', e.target.value)}
           error={errors.description}
           required
         />
         <NativeSelect
-          label="Infraestructura"
-          value={data.infrastructure_id}
+          label="Reporte"
+          value={data.report_id}
           onChange={e => {
-            console.log(e.currentTarget.value, e.target.value);
-            setData('infrastructure_id', e.currentTarget.value);
+            setData('report_id', e.currentTarget.value);
           }}
-          data={infrastructures}
-          error={errors.infrastructure_id}
+          data={reports}
+          error={errors.report_id}
           required
         />
-        <Fieldset legend="Subir evidencias *">
+        <Button
+          component={Link}
+          href={route('reports.show', data.report_id)}
+          color="cyan"
+        >
+          Ver reporte seleccionado
+        </Button>
+        <Fieldset legend="Subir evidencias de solución *">
           <DropzoneButton setData={setData} setError={setError} />
           <SimpleGrid
             cols={{ base: 1, sm: 3 }}
@@ -105,11 +106,11 @@ export default function Create({ auth, infrastructures }) {
             )}
           </Stack>
         </Fieldset>
-        <Textarea
-          label="Descripción de la evidencia"
-          value={data.evidence_description}
-          onChange={e => setData('evidence_description', e.target.value)}
-          error={errors.evidence_description}
+        <DateTimePicker
+          label="Pick date and time"
+          placeholder="Pick date and time"
+          value={data.solved_at}
+          onChange={value => setData('solved_at', value)}
         />
         <Button type="submit" disabled={processing}>
           Crear

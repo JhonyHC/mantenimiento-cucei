@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReportStatus;
+use App\Http\Requests\StoreSolutionRequest;
 use App\Models\Report;
 use App\Models\Solution;
 use Illuminate\Http\Request;
@@ -40,15 +41,33 @@ class SolutionController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Solutions/Create', [
+            'reports' => auth()->user()->solverReports()->where('status', ReportStatus::IN_PROGRESS)->get()->map(function ($report) {
+                return [
+                    'value' => $report->id,
+                    'label' => $report->title,
+                ];
+            }),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSolutionRequest $request)
     {
-        //
+        $solution = $request->user()->solutions()->create($request->except('files'));
+        $solution->report()->update(['status' => ReportStatus::SOLVED]);
+
+        $solution->evidences()->createMany(
+            collect($request->file('files'))->map(function ($file) {
+                return [
+                    'path' => $file->store('evidences'),
+                ];
+            })->toArray()
+        );
+
+        return redirect()->route('solutions.index');
     }
 
     /**

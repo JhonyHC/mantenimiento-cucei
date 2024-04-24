@@ -15,7 +15,7 @@ export default function Dashboard({ auth, reports, can }) {
         {can.create && (
           <Button
             component={Link}
-            href={route('reports.create')}
+            href={route('solutions.create')}
             justify="center"
             leftSection={<IconPlus size={20} />}
           >
