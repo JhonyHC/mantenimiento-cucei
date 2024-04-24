@@ -40,7 +40,7 @@ class ReportPolicy
         if ($user->id === $report->user_id) {
             return Response::allow();
         }
-        return $user->hasRole(['admin']);
+        return $user->hasAnyRole(['admin', 'mantenimiento']);
     }
 
     /**

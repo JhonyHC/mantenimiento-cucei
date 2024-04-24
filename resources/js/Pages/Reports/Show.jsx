@@ -125,9 +125,9 @@ export default function Show({ auth, report, can }) {
         {can.assignSolver && (
           <Button
             component={Link}
-            href={route('reports.assignSolver', report.id)}
+            href={route('reports.update', report.id)}
             as="button"
-            method="post"
+            method="patch"
             data={{
               solver_id:
                 report.solver_id === auth.user.id ? null : auth.user.id,

@@ -18,6 +18,8 @@ class Report extends Model
         'description',
         'status',
         'infrastructure_id',
+        'solver_id',
+        'evidence_description',
     ];
 
     protected $attributes = [

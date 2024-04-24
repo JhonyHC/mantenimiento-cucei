@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rules\File;
 
 class UpdateReportRequest extends FormRequest
 {
@@ -11,7 +13,10 @@ class UpdateReportRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        if ($this->has('solver_id')) {
+            return $this->user()->can('assignSolver', $this->route('report'));
+        }
+        return $this->user()->can('update', $this->route('report'));
     }
 
     /**
@@ -22,7 +27,13 @@ class UpdateReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'string|max:255',
+            'description' => 'string|max:255',
+            'infrastructure_id' => 'exists:infrastructures,id',
+            'evidence_description' => 'nullable|string|max:255',
+            'solver_id' => 'nullable|exists:users,id',
+            'files' => ['array', 'min:1', 'max:5'],
+            'files.*' => [File::image()->max('5mb')],
         ];
     }
 }

@@ -132,7 +132,33 @@ class ReportController extends Controller
      */
     public function update(UpdateReportRequest $request, Report $report)
     {
-        //
+        $report->fill($request->safe()->except('files'));
+
+        if ($report->solver_id) {
+            $report->status = ReportStatus::IN_PROGRESS;
+        } else {
+            $report->status = ReportStatus::OPEN;
+        }
+
+        $report->save();
+
+        if ($request->hasFile('files')) {
+            $report->evidences->each(function ($evidence) {
+                Storage::delete($evidence->path);
+                $evidence->delete();
+            });
+
+            $report->evidences()->createMany(
+                collect($request->file('files'))->map(function ($file) {
+                    return [
+                        'path' => $file->store('evidences'),
+                    ];
+                })->toArray()
+            );
+        }
+
+        return redirect()->route('reports.index');
+
     }
 
     /**
@@ -165,20 +191,5 @@ class ReportController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Assign a solver to the report.
-     */
-    public function assignSolver(Request $request, Report $report)
-    {
-        Gate::authorize('assignSolver', $report);
 
-        $validated = $request->validate([
-            'solver_id' => 'nullable|exists:users,id',
-        ]);
-        
-        $report->solver_id = $validated['solver_id'];
-        $report->save();
-
-        return redirect()->back();
-    }
 }
