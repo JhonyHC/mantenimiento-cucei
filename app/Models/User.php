@@ -72,4 +72,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Solution::class);
     }
+
+    /**
+     * Get the reports that the user is assigned to solve.
+     */
+    public function solverReports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'solver_id');
+    }
 }

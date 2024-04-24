@@ -90,11 +90,12 @@ export default function ReportCard({ report }) {
         <Group>
           <Text fw={700}>
             {' '}
-            Creado por: <Mark color="cyan">Jonhatan jeje</Mark>
+            Creado por: <Mark color="cyan">{report.user.name}</Mark>
           </Text>
           <Text fw={700}>
             {' '}
-            Atendido por: <Mark color="gray">Pendiente</Mark>
+            Atendido por:{' '}
+            <Mark color="gray">{report.solver?.name ?? 'Pendiente'}</Mark>
           </Text>
           <Text fw={700}>
             {' '}

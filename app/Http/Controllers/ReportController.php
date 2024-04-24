@@ -28,6 +28,7 @@ class ReportController extends Controller
                     'description' => $report->description,
                     'status' => $report->status,
                     'status_label' => ReportStatus::getDescription($report->status),
+                    'solver' => $report->solver?->only('id', 'name'),
                     'created_at' => $report->created_at,
                     'user' => $report->user->only('id', 'name'),
                     'infrastructure' => $report->infrastructure?->only('name'),
@@ -80,17 +81,18 @@ class ReportController extends Controller
     public function show(Report $report)
     {
         // Gate::authorize('view', $report);
-        $report->load('user:id,name', 'infrastructure:id,name', 'evidences:id,path,evidenceable_id,evidenceable_type');
+        $report->load('user:id,name', 'infrastructure:id,name', 'evidences:id,path,evidenceable_id,evidenceable_type', 'solver:id,name');
         $report->loadCount('importance as importance');
         //Añade el atributo user_added_importance al modelo
         $report->importance_added = $report->user_added_importance;
         return inertia('Reports/Show', [
             'report' => $report,
-            // 'can' => [
-            //     'update' => auth()->user()->can('update', $report),
-            //     'delete' => auth()->user()->can('delete', $report),
-            //     'toggleImportance' => auth()->user()->can('toggleImportance', $report),
-            // ],
+            'can' => [
+                'assignSolver' => auth()->user()->can('assignSolver', $report),
+                // 'update' => auth()->user()->can('update', $report),
+                // 'delete' => auth()->user()->can('delete', $report),
+                'toggleImportance' => auth()->user()->can('toggleImportance', $report),
+            ],
         ]);
     }
 
@@ -159,6 +161,23 @@ class ReportController extends Controller
         Gate::authorize('toggleImportance', $report);
 
         $report->importance()->toggle([auth()->id()]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Assign a solver to the report.
+     */
+    public function assignSolver(Request $request, Report $report)
+    {
+        Gate::authorize('assignSolver', $report);
+
+        $validated = $request->validate([
+            'solver_id' => 'nullable|exists:users,id',
+        ]);
+        
+        $report->solver_id = $validated['solver_id'];
+        $report->save();
 
         return redirect()->back();
     }

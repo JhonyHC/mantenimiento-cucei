@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/reports/{report}/importance', [ReportController::class, 'toggleImportance'])->name('reports.importance');
+    Route::post('/reports/{report}/assignSolver', [ReportController::class, 'assignSolver'])->name('reports.assignSolver');
     Route::resource('reports', ReportController::class);
     Route::resource('solutions', SolutionController::class)->middleware('role:admin|mantenimiento');
     Route::resource('infrastructures', InfrastructureController::class)->middleware('role:admin');

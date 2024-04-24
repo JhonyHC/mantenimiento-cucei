@@ -77,4 +77,24 @@ class ReportPolicy
     {
         return $user->hasAnyRole(['admin', 'alumno']);
     }
+
+    /**
+     * Determine whether the user can assign itself as solver.
+     */
+    public function assignSolver(User $user, Report $report): bool
+    {
+        if ($user->id === $report->solver_id) {
+            return true;
+        }
+        if($user->hasRole('mantenimiento') && $report->solver_id === null){
+            return true;
+        }
+        return $user->hasRole('admin');
+    }
+
+    /**
+     * Determine whether the user can assign a solver.
+     */
+
+
 }

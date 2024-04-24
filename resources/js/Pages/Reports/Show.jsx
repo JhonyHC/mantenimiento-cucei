@@ -18,7 +18,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 
 dayjs.extend(relativeTime);
-export default function Show({ auth, report }) {
+export default function Show({ auth, report, can }) {
   const [addingImportance, setAddingImportance] = useState(false);
   const handleAddImportance = () => {
     router.visit(route('reports.importance', report.id), {
@@ -80,11 +80,12 @@ export default function Show({ auth, report }) {
           <Group>
             <Text fw={700}>
               {' '}
-              Creado por: <Mark color="cyan">Jonhatan jeje</Mark>
+              Creado por: <Mark color="cyan">{report.user.name}</Mark>
             </Text>
             <Text fw={700}>
               {' '}
-              Atendido por: <Mark color="gray">Pendiente</Mark>
+              Atendido por:{' '}
+              <Mark color="gray">{report.solver?.name ?? 'Pendiente'}</Mark>
             </Text>
             <Text fw={700}>
               {' '}
@@ -92,33 +93,50 @@ export default function Show({ auth, report }) {
             </Text>
           </Group>
           <Group>
-            <Tooltip
-              label={
-                report.importance_added
-                  ? 'Quitar importancia'
-                  : 'Agregar importancia'
-              }
-              color="red"
-            >
-              <Button
-                variant="subtle"
-                color="red"
-                loading={addingImportance}
-                leftSection={
-                  <IconUrgent
-                    stroke={report.importance_added ? 2 : 1}
-                    size={20}
-                  />
+            {can.toggleImportance && (
+              <Tooltip
+                label={
+                  report.importance_added
+                    ? 'Quitar importancia'
+                    : 'Agregar importancia'
                 }
-                onClick={() => handleAddImportance()}
-                gap="2px"
-                align="center"
+                color="red"
               >
-                <Text>{report.importance}</Text>
-              </Button>
-            </Tooltip>
+                <Button
+                  variant="subtle"
+                  color="red"
+                  loading={addingImportance}
+                  leftSection={
+                    <IconUrgent
+                      stroke={report.importance_added ? 2 : 1}
+                      size={20}
+                    />
+                  }
+                  onClick={() => handleAddImportance()}
+                  gap="2px"
+                  align="center"
+                >
+                  <Text>{report.importance}</Text>
+                </Button>
+              </Tooltip>
+            )}
           </Group>
         </Group>
+        {can.assignSolver && (
+          <Button
+            component={Link}
+            href={route('reports.assignSolver', report.id)}
+            as="button"
+            method="post"
+            data={{
+              solver_id:
+                report.solver_id === auth.user.id ? null : auth.user.id,
+            }}
+          >
+            {report.solver_id === auth.user.id ? 'Desasignarse' : 'Asignarse'}{' '}
+            para arreglar el problema
+          </Button>
+        )}
         <div>
           <Title order={2} size="h3">
             Descripción
