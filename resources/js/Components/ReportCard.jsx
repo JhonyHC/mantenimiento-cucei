@@ -61,7 +61,11 @@ export default function ReportCard({ report }) {
         <Group>
           {(auth.user.id === report.user.id || auth.user.role === 'admin') && (
             <>
-              <ActionIcon color="cyan">
+              <ActionIcon
+                component={Link}
+                href={route('reports.edit', report.id)}
+                color="cyan"
+              >
                 <IconPencil size={20} />
               </ActionIcon>
               <ActionIcon

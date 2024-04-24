@@ -4,18 +4,18 @@ import { Head, Link } from '@inertiajs/react';
 import { ActionIcon, Button, Group, Stack, Table, Title } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 
-export default function Dashboard({ auth, infrastructures }) {
-  console.log(infrastructures);
+export default function Dashboard({ auth, users }) {
+  console.log(users);
   return (
     <>
-      <Head title="Reportes" />
+      <Head title="Usuarios" />
       <Title order={1} mb={20}>
-        Infraestructuras
+        Usuarios del sistema
       </Title>
       <Group justify="end">
         <Button
           component={Link}
-          href={route('infrastructures.create')}
+          href={route('users.create')}
           justify="center"
           leftSection={<IconPlus size={20} />}
         >
@@ -23,28 +23,30 @@ export default function Dashboard({ auth, infrastructures }) {
         </Button>
       </Group>
       <Stack spacing="md" my={30}>
-        {infrastructures.length === 0 ? (
-          <p>Sin infraestructuras</p>
+        {users.length === 0 ? (
+          <p>Sin usuarios</p>
         ) : (
           <TableScroll
             tableHeader={
               <Table.Tr>
-                <Table.Th>Name</Table.Th>
-                <Table.Th>Description</Table.Th>
+                <Table.Th>Nombre</Table.Th>
+                <Table.Th>Correo</Table.Th>
+                <Table.Th>Código</Table.Th>
                 <Table.Th>Options</Table.Th>
               </Table.Tr>
             }
           >
-            {infrastructures.map(row => (
+            {users.map(row => (
               <Table.Tr key={row.id}>
                 <Table.Td>{row.name}</Table.Td>
-                <Table.Td>{row.description}</Table.Td>
+                <Table.Td>{row.email}</Table.Td>
+                <Table.Td>{row.code}</Table.Td>
                 <Table.Td>
                   {row.id !== 1 && (
                     <Group>
                       <ActionIcon
                         component={Link}
-                        href={route('infrastructures.edit', row.id)}
+                        href={route('users.edit', row.id)}
                         color="cyan"
                       >
                         <IconPencil size={20} />
@@ -52,7 +54,7 @@ export default function Dashboard({ auth, infrastructures }) {
                       <ActionIcon
                         component={Link}
                         as="button"
-                        href={route('infrastructures.destroy', row.id)}
+                        href={route('users.destroy', row.id)}
                         method="delete"
                         color="red"
                       >

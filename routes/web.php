@@ -4,6 +4,7 @@ use App\Http\Controllers\InfrastructureController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SolutionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('reports', ReportController::class);
     Route::resource('solutions', SolutionController::class)->middleware('role:admin|mantenimiento');
     Route::resource('infrastructures', InfrastructureController::class)->middleware('role:admin');
+    Route::resource('users', UserController::class)->middleware('role:admin');
 });
 
 require __DIR__.'/auth.php';

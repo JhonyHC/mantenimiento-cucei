@@ -59,13 +59,13 @@ export function DropzoneButton({ setData, setError }) {
           </Group>
 
           <Text ta="center" fw={700} fz="lg" mt="xl">
-            <Dropzone.Accept>Drop files here</Dropzone.Accept>
-            <Dropzone.Reject>Images less than 5mb</Dropzone.Reject>
-            <Dropzone.Idle>Upload evidence</Dropzone.Idle>
+            <Dropzone.Accept>Suelta tus archivos aquí</Dropzone.Accept>
+            <Dropzone.Reject>Imagenes que pesen menos de 5mb</Dropzone.Reject>
+            <Dropzone.Idle>Sube tu evidencia</Dropzone.Idle>
           </Text>
           <Text ta="center" fz="sm" mt="xs" c="dimmed">
-            Drag&apos;n&apos;drop images here to upload. We can accept any type
-            of files that are less than 5mb in size.
+            Arrastra&apos;y&apos;suelta imagenes aquí para subirlas. Aceptamos
+            cualquier tipo de imagenes que pesen menos de 5mb.
           </Text>
         </div>
       </Dropzone>

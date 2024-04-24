@@ -7,9 +7,11 @@ use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use App\Enums\ReportStatus;
 use App\Models\Infrastructure;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 
 class ReportController extends Controller
 {
@@ -97,7 +99,30 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        //
+        $defaultSolver = new User([
+            'id' => null,
+            'name' => 'Sin asignar',
+        ]);
+        $report->load('evidences:id,path,evidenceable_id,evidenceable_type');
+        return inertia('Reports/Edit', [
+            'report' => $report,
+            'solvers' => User::select('id', 'name')->whereHas('roles', function ($query) {
+                $query->where('name', 'mantenimiento');
+            })->get()
+            ->prepend($defaultSolver)
+            ->map(function ($solver) {
+                return [
+                    'value' => $solver->id,
+                    'label' => $solver->name,
+                ];
+            }),
+            'infrastructures' => Infrastructure::select('id', 'name')->get()->map(function ($infrastructure) {
+                return [
+                    'value' => $infrastructure->id,
+                    'label' => $infrastructure->name,
+                ];
+            }),
+        ]);
     }
 
     /**

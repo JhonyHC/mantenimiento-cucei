@@ -7,6 +7,7 @@ import {
   IconReport,
   IconChecklist,
   IconBuilding,
+  IconUsers,
 } from '@tabler/icons-react';
 import classes from './SimpleNavBar.module.css';
 import ApplicationLogo from '../ApplicationLogo';
@@ -36,6 +37,12 @@ const data = [
     roles: ['admin'],
     label: 'Infraestructuras',
     icon: IconBuilding,
+  },
+  {
+    link: route('users.index'),
+    roles: ['admin'],
+    label: 'Usuarios',
+    icon: IconUsers,
   },
   //   { link: '', label: 'Databases', icon: IconDatabaseImport },
   //   { link: '', label: 'Authentication', icon: Icon2fa },
