@@ -21,7 +21,7 @@ export default function Create({ auth, reports }) {
   const { data, setData, post, processing, errors, setError, clearErrors } =
     useForm({
       description: '',
-      report_id: '1',
+      report_id: reports[0].value || 0,
       solved_at: '',
       files: [],
     });
@@ -72,13 +72,15 @@ export default function Create({ auth, reports }) {
           error={errors.report_id}
           required
         />
-        <Button
-          component={Link}
-          href={route('reports.show', data.report_id)}
-          color="cyan"
-        >
-          Ver reporte seleccionado
-        </Button>
+        {data.report_id !== 0 && (
+          <Button
+            component={Link}
+            href={route('reports.show', data.report_id)}
+            color="cyan"
+          >
+            Ver reporte seleccionado
+          </Button>
+        )}
         <Fieldset legend="Subir evidencias de solución *">
           <DropzoneButton setData={setData} setError={setError} />
           <SimpleGrid
@@ -107,11 +109,12 @@ export default function Create({ auth, reports }) {
           </Stack>
         </Fieldset>
         <DateTimePicker
-          label="Pick date and time"
-          placeholder="Pick date and time"
+          label="Fecha de solución"
+          placeholder="Fecha de solución"
           value={data.solved_at}
           onChange={value => setData('solved_at', value)}
         />
+        <Text c="red">{errors.solved_at}</Text>
         <Button type="submit" disabled={processing}>
           Crear
         </Button>

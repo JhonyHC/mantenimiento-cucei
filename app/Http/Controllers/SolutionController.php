@@ -25,9 +25,9 @@ class SolutionController extends Controller
                     'created_at' => $report->created_at,
                     'user' => $report->user->only('id', 'name'),
                     'infrastructure' => $report->infrastructure?->only('name'),
-                    'description' => $report->solution->description,
                     'solved_at' => $report->solution->solved_at,
                     'solver' => $report->solution->solver->only('id', 'name'),
+                    'solution' => $report->solution->only('id', 'description'),
                 ];
             }),
             'can' => [
@@ -75,7 +75,12 @@ class SolutionController extends Controller
      */
     public function show(Solution $solution)
     {
-        //
+        $solution->report->load('user:id,name', 'infrastructure:id,name', 'evidences:id,path,evidenceable_id,evidenceable_type', 'solver:id,name');
+        $solution->load('evidences:id,path,evidenceable_id,evidenceable_type');
+        //Añade el atributo user_added_importance al modelo
+        return inertia('Solutions/Show', [
+            'solution' => $solution,
+        ]);
     }
 
     /**

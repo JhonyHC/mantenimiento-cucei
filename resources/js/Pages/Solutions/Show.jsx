@@ -18,25 +18,13 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 
 dayjs.extend(relativeTime);
-export default function Show({ auth, report }) {
-  const [addingImportance, setAddingImportance] = useState(false);
-  const handleAddImportance = () => {
-    router.visit(route('reports.importance', report.id), {
-      method: 'post',
-      onStart: visit => {
-        setAddingImportance(true);
-      },
-      onFinish: visit => {
-        setAddingImportance(false);
-      },
-      preserveScroll: true,
-    });
-  };
-  console.log(report);
+export default function Show({ auth, solution }) {
+  const report = solution.report;
+  console.log({ solution, report });
 
   return (
     <>
-      <Head title="Crear Reporte" />
+      <Head title="Ver Reporte" />
       <Stack gap={20} mt={30}>
         <Group justify="space-between">
           <Group align="center">
@@ -56,7 +44,7 @@ export default function Show({ auth, report }) {
           </Group>
           <Group justify="space-between">
             <Group>
-              {(auth.user.id === report.user.id ||
+              {(auth.user.id === report.solver.id ||
                 auth.user.role === 'admin') && (
                 <>
                   <ActionIcon color="cyan">
@@ -65,7 +53,7 @@ export default function Show({ auth, report }) {
                   <ActionIcon
                     component={Link}
                     as="button"
-                    href={route('reports.destroy', report.id)}
+                    href={route('solutions.destroy', report.id)}
                     method="delete"
                     color="red"
                   >
@@ -80,45 +68,22 @@ export default function Show({ auth, report }) {
           <Group>
             <Text fw={700}>
               {' '}
-              Creado por: <Mark color="cyan">Jonhatan jeje</Mark>
+              Creado por: <Mark color="cyan">{report.user.name}</Mark>
             </Text>
             <Text fw={700}>
               {' '}
-              Atendido por: <Mark color="gray">Pendiente</Mark>
+              Atendido por:{' '}
+              <Mark color="gray">{report.solver?.name ?? 'Pendiente'}</Mark>
             </Text>
             <Text fw={700}>
               {' '}
               Ubicación: <Mark color="green">{report.infrastructure.name}</Mark>
             </Text>
           </Group>
-          <Group>
-            <Tooltip
-              label={
-                report.importance_added
-                  ? 'Quitar importancia'
-                  : 'Agregar importancia'
-              }
-              color="red"
-            >
-              <Button
-                variant="subtle"
-                color="red"
-                loading={addingImportance}
-                leftSection={
-                  <IconUrgent
-                    stroke={report.importance_added ? 2 : 1}
-                    size={20}
-                  />
-                }
-                onClick={() => handleAddImportance()}
-                gap="2px"
-                align="center"
-              >
-                <Text>{report.importance}</Text>
-              </Button>
-            </Tooltip>
-          </Group>
         </Group>
+        <Title order={2} size="h2">
+          Detalles del Reporte
+        </Title>
         <div>
           <Title order={2} size="h3">
             Descripción
@@ -136,6 +101,24 @@ export default function Show({ auth, report }) {
           {report.evidence_description && (
             <Text>{report.evidence_description}</Text>
           )}
+        </div>
+        <Title order={2} size="h2">
+          Detalles de la Solución
+        </Title>
+        <div>
+          <Title order={2} size="h3">
+            Descripción
+          </Title>
+          <Text>{solution.description}</Text>
+        </div>
+        <div className="max-w-screen-lg">
+          <Title order={2} size="h3">
+            Evidencia{' '}
+            <Text component="span" size="xl" c="dimmed">
+              ({solution.evidences.length})
+            </Text>
+          </Title>
+          <CardsCarousel data={solution.evidences} />
         </div>
       </Stack>
     </>

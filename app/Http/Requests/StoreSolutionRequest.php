@@ -26,7 +26,7 @@ class StoreSolutionRequest extends FormRequest
         return [
             'description' => 'required|string|max:255',
             'report_id' => 'required|exists:reports,id',
-            'solved_at' => 'required|date',
+            'solved_at' => 'required|date|before_or_equal:now',
             'files' => ['required', 'array', 'min:1', 'max:5'],
             'files.*' => [File::image()->max('5mb')],
         ];
