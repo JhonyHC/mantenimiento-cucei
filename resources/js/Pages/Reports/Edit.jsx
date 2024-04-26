@@ -1,6 +1,6 @@
 import { DropzoneButton } from '@/Components/Dropzone/DropzoneButton';
 import AppLayout from '@/Layouts/AppLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import {
   Button,
   Fieldset,
@@ -15,37 +15,39 @@ import {
 } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 
-export default function Create({ report, infrastructures, solvers }) {
+export default function Edit({ report, infrastructures, solvers, auth }) {
   console.log({ report, infrastructures, solvers });
-  const previews = useRef([]);
-  const { data, setData, patch, processing, errors, setError, clearErrors } =
-    useForm({
-      title: report.title,
-      description: report.description,
-      infrastructure_id: report.infrastructure_id,
-      files: [],
-      evidence_description: report.evidence_description || '',
-      solver_id: report.solver_id || '0',
-    });
+  const { data, setData, processing, errors, setError, clearErrors } = useForm(
+    () => {
+      const editInfo = {
+        title: report.title,
+        description: report.description,
+        infrastructure_id: report.infrastructure_id,
+        files: [],
+        evidence_description: report.evidence_description || '',
+      };
+      if (auth.user.role === 'admin') {
+        editInfo.solver_id = report.solver_id || '0';
+      }
 
-  useEffect(() => {
-    previews.current = data.files.map((file, index) => {
-      const imageUrl = URL.createObjectURL(file);
-      return (
-        <Image
-          key={index}
-          src={imageUrl}
-          onLoad={() => URL.revokeObjectURL(imageUrl)}
-        />
-      );
-    });
-  }, [data.files]);
+      return editInfo;
+    }
+  );
 
-  useEffect(() => {
-    previews.current = report.evidences.map(evidence => {
-      return <Image key={evidence.id} src={'/storage/' + evidence.path} />;
-    });
-  }, []);
+  const previews = data.files.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file);
+    return (
+      <Image
+        key={index}
+        src={imageUrl}
+        onLoad={() => URL.revokeObjectURL(imageUrl)}
+      />
+    );
+  });
+
+  const currentEvidence = report.evidences.map(evidence => {
+    return <Image key={evidence.id} src={'/storage/' + evidence.path} />;
+  });
 
   useEffect(() => {
     return () => data.files.forEach(file => URL.revokeObjectURL(file.preview));
@@ -54,7 +56,10 @@ export default function Create({ report, infrastructures, solvers }) {
   function submit(e) {
     e.preventDefault();
     clearErrors();
-    patch(route('reports.update', report.id));
+    router.post(route('reports.update', report.id), {
+      _method: 'patch',
+      ...data,
+    });
   }
 
   return (
@@ -93,9 +98,9 @@ export default function Create({ report, infrastructures, solvers }) {
           <DropzoneButton setData={setData} setError={setError} />
           <SimpleGrid
             cols={{ base: 1, sm: 3 }}
-            mt={previews.current.length > 0 ? 'xl' : 0}
+            mt={previews.length > 0 ? 'xl' : 0}
           >
-            {previews.current}
+            {previews}
           </SimpleGrid>
           <Stack mt="xs">
             {Array.isArray(errors.files) ? (
@@ -115,6 +120,10 @@ export default function Create({ report, infrastructures, solvers }) {
               <Text c="red">{errors.files}</Text>
             )}
           </Stack>
+          <Title order={3} size="h4" mt="xl" mb={0}>
+            Evidencia actual:
+          </Title>
+          <SimpleGrid cols={{ base: 1, sm: 3 }}>{currentEvidence}</SimpleGrid>
         </Fieldset>
         <Textarea
           label="Descripción de la evidencia"
@@ -122,15 +131,17 @@ export default function Create({ report, infrastructures, solvers }) {
           onChange={e => setData('evidence_description', e.target.value)}
           error={errors.evidence_description}
         />
-        <NativeSelect
-          label="Cambiar encargado"
-          value={data.solver_id}
-          onChange={e => {
-            setData('solver_id', e.currentTarget.value);
-          }}
-          data={solvers}
-          error={errors.solver_id}
-        />
+        {auth.user.role === 'admin' && (
+          <NativeSelect
+            label="Cambiar encargado"
+            value={data.solver_id}
+            onChange={e => {
+              setData('solver_id', e.currentTarget.value);
+            }}
+            data={solvers}
+            error={errors.solver_id}
+          />
+        )}
         <Button type="submit" disabled={processing}>
           Editar
         </Button>

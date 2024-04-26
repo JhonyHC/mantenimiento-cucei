@@ -32,7 +32,7 @@ class UpdateReportRequest extends FormRequest
             'infrastructure_id' => 'exists:infrastructures,id',
             'evidence_description' => 'nullable|string|max:255',
             'solver_id' => 'nullable|exists:users,id',
-            'files' => ['array', 'min:1', 'max:5'],
+            'files' => ['array', 'min:0', 'max:5'],
             'files.*' => [File::image()->max('5mb')],
         ];
     }

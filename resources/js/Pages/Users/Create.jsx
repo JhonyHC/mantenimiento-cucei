@@ -48,7 +48,7 @@ export default function Create() {
         <TextInput
           label="Código"
           value={data.code}
-          onChange={e => setData('email', e.target.value)}
+          onChange={e => setData('code', e.target.value)}
           error={errors.code}
           required
         />

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\ReportStatus;
 use App\Models\Solution;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -45,7 +46,13 @@ class SolutionPolicy
      */
     public function delete(User $user, Solution $solution): bool
     {
-        //
+        if ($solution->report->status === ReportStatus::CLOSED) {
+            return false;
+        }
+        if ($user->id === $solution->user_id) {
+            return true;
+        }
+        return $user->hasRole('admin');
     }
 
     /**

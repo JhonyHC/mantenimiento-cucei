@@ -174,6 +174,14 @@ class ReportController extends Controller
             $evidence->delete();
         });
 
+        //Delete solution evidences if exists
+        if ($report->solution) {
+            $report->solution->evidences->each(function ($evidence) {
+                Storage::delete($evidence->path);
+                $evidence->delete();
+            });
+        }
+
         $report->delete();
 
         return redirect()->route('reports.index');

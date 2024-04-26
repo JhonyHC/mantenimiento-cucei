@@ -21,7 +21,7 @@ export default function Create({ auth, reports }) {
   const { data, setData, post, processing, errors, setError, clearErrors } =
     useForm({
       description: '',
-      report_id: reports[0].value || 0,
+      report_id: reports[0]?.value || 0,
       solved_at: '',
       files: [],
     });
@@ -72,7 +72,7 @@ export default function Create({ auth, reports }) {
           error={errors.report_id}
           required
         />
-        {data.report_id !== 0 && (
+        {data.report_id !== 0 ? (
           <Button
             component={Link}
             href={route('reports.show', data.report_id)}
@@ -80,6 +80,15 @@ export default function Create({ auth, reports }) {
           >
             Ver reporte seleccionado
           </Button>
+        ) : (
+          <Text
+            c="red"
+            td="underline"
+            component={Link}
+            href={route('reports.index')}
+          >
+            No eres encargado de ningún reporte, ve a reportes y asignate uno
+          </Text>
         )}
         <Fieldset legend="Subir evidencias de solución *">
           <DropzoneButton setData={setData} setError={setError} />

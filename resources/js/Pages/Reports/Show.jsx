@@ -59,7 +59,11 @@ export default function Show({ auth, report, can }) {
               {(auth.user.id === report.user.id ||
                 auth.user.role === 'admin') && (
                 <>
-                  <ActionIcon color="cyan">
+                  <ActionIcon
+                    component={Link}
+                    href={route('reports.edit', report.id)}
+                    color="cyan"
+                  >
                     <IconPencil size={20} />
                   </ActionIcon>
                   <ActionIcon
@@ -132,6 +136,7 @@ export default function Show({ auth, report, can }) {
               solver_id:
                 report.solver_id === auth.user.id ? null : auth.user.id,
             }}
+            color={report.solver_id === auth.user.id ? 'red' : 'blue'}
           >
             {report.solver_id === auth.user.id ? 'Desasignarse' : 'Asignarse'}{' '}
             para arreglar el problema
@@ -152,7 +157,10 @@ export default function Show({ auth, report, can }) {
           </Title>
           <CardsCarousel data={report.evidences} />
           {report.evidence_description && (
-            <Text>{report.evidence_description}</Text>
+            <Text my={10}>
+              <Mark color="blue">Descripción de la evidencia: </Mark>
+              {report.evidence_description}
+            </Text>
           )}
         </div>
       </Stack>

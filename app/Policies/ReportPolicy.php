@@ -38,7 +38,7 @@ class ReportPolicy
     public function update(User $user, Report $report): bool
     {
         if ($user->id === $report->user_id) {
-            return Response::allow();
+            return true;
         }
         return $user->hasAnyRole(['admin', 'mantenimiento']);
     }

@@ -80,4 +80,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Report::class, 'solver_id');
     }
+
+    /**
+     * Get the comments for the user.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

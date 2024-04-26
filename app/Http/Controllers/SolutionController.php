@@ -7,6 +7,8 @@ use App\Http\Requests\StoreSolutionRequest;
 use App\Models\Report;
 use App\Models\Solution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class SolutionController extends Controller
 {
@@ -104,6 +106,18 @@ class SolutionController extends Controller
      */
     public function destroy(Solution $solution)
     {
-        //
+        Gate::authorize('delete', $solution);
+
+        //Delete evidences
+        $solution->evidences->each(function ($evidence) {
+            Storage::delete($evidence->path);
+            $evidence->delete();
+        });
+
+        $solution->report->update(['status' => ReportStatus::IN_PROGRESS]);
+
+        $solution->delete();
+
+        return redirect()->route('solutions.index');
     }
 }
