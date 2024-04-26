@@ -14,8 +14,6 @@ Route::get('/', function () {
     return Inertia::render('Landing/Index', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
 });
 
@@ -30,7 +28,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/reports/{report}/importance', [ReportController::class, 'toggleImportance'])->name('reports.importance');
     Route::resource('reports', ReportController::class);
-    Route::resource('reports.comments', CommentController::class)->shallow();
+    Route::resource('reports.comments', CommentController::class)->shallow()->only(['store', 'update', 'destroy']);
     Route::resource('solutions', SolutionController::class)->middleware('role:admin|mantenimiento');
     Route::resource('infrastructures', InfrastructureController::class)->middleware('role:admin');
     Route::resource('users', UserController::class)->middleware('role:admin');
