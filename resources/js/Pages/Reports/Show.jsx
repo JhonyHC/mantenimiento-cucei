@@ -1,4 +1,5 @@
 import { CardsCarousel } from '@/Components/CardsCarousel/CardsCarousel';
+import CommentsSection from '@/Components/CommentsSection';
 import ReportStatus from '@/Utils/ReportStatus';
 import { Head, Link, router } from '@inertiajs/react';
 import {
@@ -163,6 +164,7 @@ export default function Show({ auth, report, can }) {
             </Text>
           )}
         </div>
+        <CommentsSection report={report} />
       </Stack>
     </>
   );

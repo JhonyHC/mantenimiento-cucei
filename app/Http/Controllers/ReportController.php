@@ -81,12 +81,38 @@ class ReportController extends Controller
     public function show(Report $report)
     {
         // Gate::authorize('view', $report);
-        $report->load('user:id,name', 'infrastructure:id,name', 'evidences:id,path,evidenceable_id,evidenceable_type', 'solver:id,name');
+        // $report->load('user:id,name', 'infrastructure:id,name', 'evidences:id,path,evidenceable_id,evidenceable_type', 'solver:id,name', 'comments');
         $report->loadCount('importance as importance');
         //Añade el atributo user_added_importance al modelo
-        $report->importance_added = $report->user_added_importance;
+        // $report->importance_added = $report->user_added_importance;
         return inertia('Reports/Show', [
-            'report' => $report,
+            'report' => [
+                'id' => $report->id,
+                'title' => $report->title,
+                'description' => $report->description,
+                'status' => $report->status,
+                'status_label' => ReportStatus::getDescription($report->status),
+                'solver' => $report->solver?->only('id', 'name'),
+                'created_at' => $report->created_at,
+                'user' => $report->user->only('id', 'name'),
+                'infrastructure' => $report->infrastructure?->only('id', 'name'),
+                'importance_added' => $report->user_added_importance,
+                'importance' => $report->importance,
+                'evidences' => $report->evidences->map(function ($evidence) {
+                    return [
+                        'id' => $evidence->id,
+                        'path' => $evidence->path,
+                    ];
+                }),
+                'comments' => $report->comments()->latest()->get()->map(function ($comment) {
+                    return [
+                        'id' => $comment->id,
+                        'content' => $comment->content,
+                        'created_at' => $comment->created_at,
+                        'user' => $comment->user->only('id', 'name'),
+                    ];
+                }),
+            ],
             'can' => [
                 'assignSolver' => auth()->user()->can('assignSolver', $report),
                 // 'update' => auth()->user()->can('update', $report),

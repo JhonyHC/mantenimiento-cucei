@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\InfrastructureController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/reports/{report}/importance', [ReportController::class, 'toggleImportance'])->name('reports.importance');
     Route::resource('reports', ReportController::class);
+    Route::resource('reports.comments', CommentController::class)->shallow();
     Route::resource('solutions', SolutionController::class)->middleware('role:admin|mantenimiento');
     Route::resource('infrastructures', InfrastructureController::class)->middleware('role:admin');
     Route::resource('users', UserController::class)->middleware('role:admin');

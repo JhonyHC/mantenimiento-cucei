@@ -11,7 +11,7 @@ class UpdateCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->id === $this->route('comment')->user_id;
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'content' => 'required|min:3|max:255'
         ];
     }
 }
