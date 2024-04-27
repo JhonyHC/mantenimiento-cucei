@@ -16,6 +16,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 export default function Edit({ report, infrastructures, solvers, auth }) {
+  const allSolvers = [{ value: '', label: 'Sin asignar' }, ...solvers];
   console.log({ report, infrastructures, solvers });
   const { data, setData, processing, errors, setError, clearErrors } = useForm(
     () => {
@@ -27,7 +28,7 @@ export default function Edit({ report, infrastructures, solvers, auth }) {
         evidence_description: report.evidence_description || '',
       };
       if (auth.user.role === 'admin') {
-        editInfo.solver_id = report.solver_id || '0';
+        editInfo.solver_id = report.solver_id || '';
       }
 
       return editInfo;
@@ -138,7 +139,7 @@ export default function Edit({ report, infrastructures, solvers, auth }) {
             onChange={e => {
               setData('solver_id', e.currentTarget.value);
             }}
-            data={solvers}
+            data={allSolvers}
             error={errors.solver_id}
           />
         )}

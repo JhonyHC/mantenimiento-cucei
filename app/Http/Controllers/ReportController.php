@@ -128,17 +128,16 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        $defaultSolver = new User([
-            'id' => null,
-            'name' => 'Sin asignar',
-        ]);
+        // $defaultSolver = new stdClass();
+        // $defaultSolver->id = '';
+        // $defaultSolver->name = 'Sin asignar';
         $report->load('evidences:id,path,evidenceable_id,evidenceable_type');
         return inertia('Reports/Edit', [
             'report' => $report,
             'solvers' => User::select('id', 'name')->whereHas('roles', function ($query) {
                 $query->where('name', 'mantenimiento');
             })->get()
-            ->prepend($defaultSolver)
+            // ->prepend($defaultSolver)
             ->map(function ($solver) {
                 return [
                     'value' => $solver->id,
