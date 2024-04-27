@@ -1,6 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import {
   Button,
+  NativeSelect,
   PasswordInput,
   Stack,
   TextInput,
@@ -9,11 +10,12 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-export default function Create() {
+export default function Create({ roles }) {
   const { data, setData, post, processing, errors, clearErrors } = useForm({
     name: '',
     email: '',
     code: '',
+    role: 'alumno',
     password: '',
   });
 
@@ -30,6 +32,14 @@ export default function Create() {
         Crear Usuario
       </Title>
       <Stack component="form" maw="66%" onSubmit={submit}>
+        <NativeSelect
+          label="Rol"
+          value={data.role}
+          data={roles}
+          onChange={e => setData('role', e.target.value)}
+          error={errors.role}
+          required
+        />
         <TextInput
           label="Nombre"
           value={data.name}
