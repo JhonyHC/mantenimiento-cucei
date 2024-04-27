@@ -28,7 +28,13 @@ export default function Show({ auth, solution }) {
       <Stack gap={20} mt={30}>
         <Group justify="space-between">
           <Group align="center">
-            <Title order={1}>{report.title}</Title>
+            <Title
+              component={Link}
+              href={route('reports.show', report.id)}
+              order={1}
+            >
+              {report.title}
+            </Title>
             <Badge color="red">
               {ReportStatus.getDescriptions(report.status)}
             </Badge>

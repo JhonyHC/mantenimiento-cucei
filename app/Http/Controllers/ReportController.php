@@ -38,6 +38,7 @@ class ReportController extends Controller
             }),
             'can' => [
                 'create' => auth()->user()->can('create', Report::class),
+                'toggleImportance' => auth()->user()->hasAnyRole(['admin', 'alumno']),
             ],
         ]);
     }
@@ -184,7 +185,6 @@ class ReportController extends Controller
         }
 
         return redirect()->route('reports.index');
-
     }
 
     /**

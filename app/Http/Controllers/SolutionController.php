@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ReportStatus;
 use App\Http\Requests\StoreSolutionRequest;
+use App\Http\Requests\UpdateSolutionRequest;
 use App\Models\Report;
 use App\Models\Solution;
 use Illuminate\Http\Request;
@@ -90,15 +91,35 @@ class SolutionController extends Controller
      */
     public function edit(Solution $solution)
     {
-        //
+        $solution->load('evidences:id,path,evidenceable_id,evidenceable_type', 'report:id,title');
+        return inertia('Solutions/Edit', [
+            'solution' => $solution,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Solution $solution)
+    public function update(UpdateSolutionRequest $request, Solution $solution)
     {
-        //
+        $solution->update($request->safe()->except('files'));
+
+        if ($request->hasFile('files')) {
+            $solution->evidences->each(function ($evidence) {
+                Storage::delete($evidence->path);
+                $evidence->delete();
+            });
+
+            $solution->evidences()->createMany(
+                collect($request->file('files'))->map(function ($file) {
+                    return [
+                        'path' => $file->store('evidences'),
+                    ];
+                })->toArray()
+            );
+        }
+
+        return redirect()->route('solutions.index');
     }
 
     /**

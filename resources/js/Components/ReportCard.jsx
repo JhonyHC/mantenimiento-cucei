@@ -24,7 +24,7 @@ import { useState } from 'react';
 dayjs.extend(relativeTime);
 
 export default function ReportCard({ report }) {
-  const { auth } = usePage().props;
+  const { auth, can } = usePage().props;
   const [addingImportance, setAddingImportance] = useState(false);
 
   const handleAddImportance = () => {
@@ -103,31 +103,33 @@ export default function ReportCard({ report }) {
           </Text>
         </Group>
         <Group>
-          <Tooltip
-            label={
-              report.importance_added
-                ? 'Quitar importancia'
-                : 'Agregar importancia'
-            }
-            color="red"
-          >
-            <Button
-              variant={report.importance_added ? 'light' : 'subtle'}
-              color="red"
-              loading={addingImportance}
-              leftSection={
-                <IconUrgent
-                  stroke={report.importance_added ? 2 : 1}
-                  size={20}
-                />
+          {can.toggleImportance && (
+            <Tooltip
+              label={
+                report.importance_added
+                  ? 'Quitar importancia'
+                  : 'Agregar importancia'
               }
-              onClick={() => handleAddImportance()}
-              gap="2px"
-              align="center"
+              color="red"
             >
-              <Text>{report.importance}</Text>
-            </Button>
-          </Tooltip>
+              <Button
+                variant={report.importance_added ? 'light' : 'subtle'}
+                color="red"
+                loading={addingImportance}
+                leftSection={
+                  <IconUrgent
+                    stroke={report.importance_added ? 2 : 1}
+                    size={20}
+                  />
+                }
+                onClick={() => handleAddImportance()}
+                gap="2px"
+                align="center"
+              >
+                <Text>{report.importance}</Text>
+              </Button>
+            </Tooltip>
+          )}
           {/* <Button
             component={Link}
             href={route('reports.show', 1)}

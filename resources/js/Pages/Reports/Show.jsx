@@ -135,11 +135,11 @@ export default function Show({ auth, report, can }) {
             method="patch"
             data={{
               solver_id:
-                report.solver_id === auth.user.id ? null : auth.user.id,
+                report.solver?.id === auth.user.id ? null : auth.user.id,
             }}
-            color={report.solver_id === auth.user.id ? 'red' : 'blue'}
+            color={report.solver?.id === auth.user.id ? 'red' : 'blue'}
           >
-            {report.solver_id === auth.user.id ? 'Desasignarse' : 'Asignarse'}{' '}
+            {report.solver?.id === auth.user.id ? 'Desasignarse' : 'Asignarse'}{' '}
             para arreglar el problema
           </Button>
         )}

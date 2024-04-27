@@ -1,10 +1,11 @@
 import { DropzoneButton } from '@/Components/Dropzone/DropzoneButton';
 import AppLayout from '@/Layouts/AppLayout';
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
   Button,
   Fieldset,
   Image,
+  Mark,
   NativeSelect,
   SimpleGrid,
   Stack,
@@ -13,26 +14,17 @@ import {
   Textarea,
   Title,
 } from '@mantine/core';
-import { useEffect, useRef, useState } from 'react';
+import { DateTimePicker } from '@mantine/dates';
+import { useEffect, useState } from 'react';
 
-export default function Edit({ report, infrastructures, solvers, auth }) {
-  console.log({ report, infrastructures, solvers });
-  const { data, setData, processing, errors, setError, clearErrors } = useForm(
-    () => {
-      const editInfo = {
-        title: report.title,
-        description: report.description,
-        infrastructure_id: report.infrastructure_id,
-        files: [],
-        evidence_description: report.evidence_description || '',
-      };
-      if (auth.user.role === 'admin') {
-        editInfo.solver_id = report.solver_id || '0';
-      }
-
-      return editInfo;
-    }
-  );
+export default function Edit({ auth, solution }) {
+  console.log(solution);
+  const { data, setData, processing, errors, setError, clearErrors } = useForm({
+    description: solution.description,
+    report_id: solution.report_id,
+    solved_at: solution.solved_at,
+    files: [],
+  });
 
   const previews = data.files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file);
@@ -45,18 +37,18 @@ export default function Edit({ report, infrastructures, solvers, auth }) {
     );
   });
 
-  const currentEvidence = report.evidences.map(evidence => {
-    return <Image key={evidence.id} src={'/storage/' + evidence.path} />;
-  });
-
   useEffect(() => {
     return () => data.files.forEach(file => URL.revokeObjectURL(file.preview));
   }, []);
 
+  const currentEvidence = solution.evidences.map(evidence => {
+    return <Image key={evidence.id} src={'/storage/' + evidence.path} />;
+  });
+
   function submit(e) {
     e.preventDefault();
     clearErrors();
-    router.post(route('reports.update', report.id), {
+    router.post(route('solutions.update', solution.id), {
       _method: 'patch',
       ...data,
     });
@@ -64,37 +56,31 @@ export default function Edit({ report, infrastructures, solvers, auth }) {
 
   return (
     <>
-      <Head title="Editar Reporte" />
+      <Head title="Editar Solución" />
       <Title order={1} mb={20}>
-        Editar Reporte
+        Editar Solución
       </Title>
       <Stack component="form" maw="66%" onSubmit={submit}>
-        <TextInput
-          label="Titulo"
-          value={data.title}
-          onChange={e => setData('title', e.target.value)}
-          error={errors.title}
-          required
-        />
         <Textarea
           label="Descripción"
           value={data.description}
+          placeholder="Descripción de la solución del problema y de la evidencia"
           onChange={e => setData('description', e.target.value)}
           error={errors.description}
           required
         />
-        <NativeSelect
-          label="Infraestructura"
-          value={data.infrastructure_id}
-          onChange={e => {
-            console.log(e.currentTarget.value, e.target.value);
-            setData('infrastructure_id', e.currentTarget.value);
-          }}
-          data={infrastructures}
-          error={errors.infrastructure_id}
-          required
-        />
-        <Fieldset legend="  ">
+        <Text size="xl">
+          Solución al reporte: <Mark color="cyan">{solution.report.title}</Mark>
+        </Text>
+        <Button
+          component={Link}
+          href={route('reports.show', data.report_id)}
+          color="cyan"
+        >
+          Ver reporte seleccionado
+        </Button>
+
+        <Fieldset legend="Subir evidencias * (Las nuevas evidencias reemplazaran a las anteriores)">
           <DropzoneButton setData={setData} setError={setError} />
           <SimpleGrid
             cols={{ base: 1, sm: 3 }}
@@ -125,25 +111,15 @@ export default function Edit({ report, infrastructures, solvers, auth }) {
           </Title>
           <SimpleGrid cols={{ base: 1, sm: 3 }}>{currentEvidence}</SimpleGrid>
         </Fieldset>
-        <Textarea
-          label="Descripción de la evidencia"
-          value={data.evidence_description}
-          onChange={e => setData('evidence_description', e.target.value)}
-          error={errors.evidence_description}
+        <DateTimePicker
+          label="Fecha de solución"
+          placeholder="Fecha de solución"
+          value={new Date(data.solved_at)}
+          onChange={value => setData('solved_at', value)}
         />
-        {auth.user.role === 'admin' && (
-          <NativeSelect
-            label="Cambiar encargado"
-            value={data.solver_id}
-            onChange={e => {
-              setData('solver_id', e.currentTarget.value);
-            }}
-            data={solvers}
-            error={errors.solver_id}
-          />
-        )}
+        <Text c="red">{errors.solved_at}</Text>
         <Button type="submit" disabled={processing}>
-          Editar
+          Editar Solución
         </Button>
       </Stack>
     </>

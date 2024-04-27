@@ -38,7 +38,13 @@ class SolutionPolicy
      */
     public function update(User $user, Solution $solution): bool
     {
-        //
+        if ($solution->report->status === ReportStatus::CLOSED) {
+            return false;
+        }
+        if ($user->id === $solution->user_id) {
+            return true;
+        }
+        return $user->hasRole('admin');
     }
 
     /**

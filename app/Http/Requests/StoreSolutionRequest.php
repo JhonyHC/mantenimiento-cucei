@@ -24,7 +24,7 @@ class StoreSolutionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'required|string|max:255',
+            'description' => 'required|string|min:3|max:255',
             'report_id' => 'required|exists:reports,id',
             'solved_at' => 'required|date|before_or_equal:now',
             'files' => ['required', 'array', 'min:1', 'max:5'],
