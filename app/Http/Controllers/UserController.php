@@ -72,7 +72,19 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return inertia('Users/Edit', [
-            'user' => $user->only('id', 'name', 'email', 'code')
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'code' => $user->code,
+                'role' => $user->roles->first()->name,
+            ],
+            'roles' => Role::select('id', 'name')->get()->map(function ($role) {
+                return [
+                    'value' => $role->name,
+                    'label' => ucfirst($role->name),
+                ];
+            }),
         ]);
     }
 
@@ -81,6 +93,23 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $validated = $request->validate([
+            'name' => 'string|max:255',
+            'email' => 'string|lowercase|email|max:255|unique:' . User::class . ',email,' . $user->id,
+            'code' => 'string|numeric|digits:9|unique:' . User::class . ',code,' . $user->id,
+            'role' => 'string|exists:roles,name',
+            'password' => ['nullable',Rules\Password::defaults()],
+        ]);
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+        // dd($validated);
+        $user->update($validated);
+        $user->syncRoles($request->role);
+
+        return redirect()->route('users.index');
 
     }
 
@@ -89,6 +118,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403);
+        }
+        $user->delete();
+        return redirect()->route('users.index');
     }
 }

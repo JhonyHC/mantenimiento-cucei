@@ -48,7 +48,7 @@ export function CommentSimple({
           <Text size="sm">
             {comment.user.name}{' '}
             <Text c="dimmed" component="span">
-              ({auth.user.role})
+              ({comment.user.role})
             </Text>
           </Text>
           <Text size="xs" c="dimmed">

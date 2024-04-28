@@ -83,6 +83,10 @@ class SolutionController extends Controller
         //Añade el atributo user_added_importance al modelo
         return inertia('Solutions/Show', [
             'solution' => $solution,
+            'can' => [
+                'update' => auth()->user()->can('update', $solution),
+                'delete' => auth()->user()->can('delete', $solution),
+            ],
         ]);
     }
 
@@ -140,5 +144,28 @@ class SolutionController extends Controller
         $solution->delete();
 
         return redirect()->route('solutions.index');
+    }
+
+    /**
+     * History of the specified resource.
+     */
+    public function history() {
+
+        return inertia('Solutions/History', [
+            'reports' => Report::with('user', 'solution')->whereIn('status', [ReportStatus::SOLVED, ReportStatus::CLOSED])->latest()->get()->map(function ($report) {
+                return [
+                    'id' => $report->id,
+                    'title' => $report->title,
+                    'status' => $report->status,
+                    'status_label' => ReportStatus::getDescription($report->status),
+                    'created_at' => $report->created_at,
+                    'user' => $report->user->only('id', 'name'),
+                    'infrastructure' => $report->infrastructure?->only('name'),
+                    'solved_at' => $report->solution->solved_at,
+                    'solver' => $report->solution->solver->only('id', 'name'),
+                    'solution' => $report->solution->only('id', 'description'),
+                ];
+            }),
+        ]);
     }
 }

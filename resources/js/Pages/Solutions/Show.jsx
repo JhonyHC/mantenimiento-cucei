@@ -18,7 +18,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 
 dayjs.extend(relativeTime);
-export default function Show({ auth, solution }) {
+export default function Show({ auth, solution, can }) {
   const report = solution.report;
   console.log({ solution, report });
 
@@ -50,16 +50,19 @@ export default function Show({ auth, solution }) {
           </Group>
           <Group justify="space-between">
             <Group>
-              {(auth.user.id === report.solver.id ||
-                auth.user.role === 'admin') && (
+              {can.update && (
                 <>
-                  <ActionIcon color="cyan">
+                  <ActionIcon
+                    component={Link}
+                    href={route('solutions.edit', solution.id)}
+                    color="cyan"
+                  >
                     <IconPencil size={20} />
                   </ActionIcon>
                   <ActionIcon
                     component={Link}
                     as="button"
-                    href={route('solutions.destroy', report.id)}
+                    href={route('solutions.destroy', solution.id)}
                     method="delete"
                     color="red"
                   >
@@ -126,6 +129,26 @@ export default function Show({ auth, solution }) {
           </Title>
           <CardsCarousel data={solution.evidences} />
         </div>
+        {auth.user.role === 'admin' &&
+          report.status === ReportStatus.SOLVED && (
+            <Tooltip
+              label="Cierra el reporte cuando hayas comprobado que el problema haya sido solucionado"
+              withArrow
+              color="cyan"
+            >
+              <Button
+                component={Link}
+                href={route('reports.update', report.id)}
+                color="blue"
+                size="lg"
+                as="button"
+                method="patch"
+                data={{ status: ReportStatus.CLOSED }}
+              >
+                Cerrar Reporte
+              </Button>
+            </Tooltip>
+          )}
       </Stack>
     </>
   );

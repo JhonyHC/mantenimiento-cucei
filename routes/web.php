@@ -27,9 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/reports/{report}/importance', [ReportController::class, 'toggleImportance'])->name('reports.importance');
+    Route::get('/solutions/history', [SolutionController::class, 'history'])->name('solutions.history');
     Route::resource('reports', ReportController::class);
     Route::resource('reports.comments', CommentController::class)->shallow()->only(['store', 'update', 'destroy']);
-    Route::resource('solutions', SolutionController::class)->middleware('role:admin|mantenimiento');
+    Route::resource('solutions', SolutionController::class);
     Route::resource('infrastructures', InfrastructureController::class)->middleware('role:admin');
     Route::resource('users', UserController::class)->middleware('role:admin');
 });

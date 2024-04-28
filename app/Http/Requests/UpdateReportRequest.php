@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ReportStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
 class UpdateReportRequest extends FormRequest
@@ -31,6 +33,7 @@ class UpdateReportRequest extends FormRequest
             'description' => 'string|max:255',
             'infrastructure_id' => 'exists:infrastructures,id',
             'evidence_description' => 'nullable|string|max:255',
+            'status' => [Rule::enum(ReportStatus::class)],
             'solver_id' => 'nullable|exists:users,id',
             'files' => ['array', 'min:0', 'max:5'],
             'files.*' => [File::image()->max('5mb')],

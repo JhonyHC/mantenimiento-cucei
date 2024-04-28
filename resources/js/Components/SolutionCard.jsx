@@ -23,7 +23,7 @@ import { useState } from 'react';
 
 dayjs.extend(relativeTime);
 
-export default function SolutionCard({ report }) {
+export default function SolutionCard({ report, viewOnly = false }) {
   const { auth } = usePage().props;
 
   return (
@@ -45,27 +45,27 @@ export default function SolutionCard({ report }) {
           </Tooltip>
         </Group>
         <Group>
-          {(auth.user.id === report.solver.id ||
-            auth.user.role === 'admin') && (
-            <>
-              <ActionIcon
-                component={Link}
-                href={route('solutions.edit', report.solution.id)}
-                color="cyan"
-              >
-                <IconPencil size={20} />
-              </ActionIcon>
-              <ActionIcon
-                component={Link}
-                as="button"
-                href={route('solutions.destroy', report.solution.id)}
-                method="delete"
-                color="red"
-              >
-                <IconTrash size={20} />
-              </ActionIcon>
-            </>
-          )}
+          {(auth.user.id === report.solver.id || auth.user.role === 'admin') &&
+            !viewOnly && (
+              <>
+                <ActionIcon
+                  component={Link}
+                  href={route('solutions.edit', report.solution.id)}
+                  color="cyan"
+                >
+                  <IconPencil size={20} />
+                </ActionIcon>
+                <ActionIcon
+                  component={Link}
+                  as="button"
+                  href={route('solutions.destroy', report.solution.id)}
+                  method="delete"
+                  color="red"
+                >
+                  <IconTrash size={20} />
+                </ActionIcon>
+              </>
+            )}
         </Group>
       </Group>
       <Text>

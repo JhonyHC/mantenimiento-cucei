@@ -8,6 +8,7 @@ import {
   IconChecklist,
   IconBuilding,
   IconUsers,
+  IconHistory,
 } from '@tabler/icons-react';
 import classes from './SimpleNavBar.module.css';
 import ApplicationLogo from '../ApplicationLogo';
@@ -31,6 +32,12 @@ const data = [
     roles: ['admin', 'mantenimiento'],
     label: 'Soluciones',
     icon: IconChecklist,
+  },
+  {
+    link: route('solutions.history'),
+    roles: ['admin', 'mantenimiento', 'alumno'],
+    label: 'Historial / Consulta',
+    icon: IconHistory,
   },
   {
     link: route('infrastructures.index'),

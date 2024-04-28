@@ -105,12 +105,16 @@ class ReportController extends Controller
                         'path' => $evidence->path,
                     ];
                 }),
-                'comments' => $report->comments()->latest()->get()->map(function ($comment) {
+                'comments' => $report->comments()->with('user:id,name', 'user.roles')->latest()->get()->map(function ($comment) {
                     return [
                         'id' => $comment->id,
                         'content' => $comment->content,
                         'created_at' => $comment->created_at,
-                        'user' => $comment->user->only('id', 'name'),
+                        'user' => [
+                            'id' => $comment->user->id,
+                            'name' => $comment->user->name,
+                            'role' => $comment->user->roles->first()->name,
+                        ],
                     ];
                 }),
             ],
@@ -161,9 +165,9 @@ class ReportController extends Controller
         $report->fill($request->safe()->except('files'));
 
         if ($report->solver_id) {
-            $report->status = ReportStatus::IN_PROGRESS;
+            $report->status = $report->status === ReportStatus::CLOSED->value ? ReportStatus::CLOSED->value : ReportStatus::IN_PROGRESS->value;
         } else {
-            $report->status = ReportStatus::OPEN;
+            $report->status = ReportStatus::OPEN->value;
         }
 
         $report->save();
