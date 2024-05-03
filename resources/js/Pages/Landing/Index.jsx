@@ -14,10 +14,10 @@ export default function Index() {
             gradient={{ from: 'blue', to: 'cyan' }}
             inherit
           >
-            Mantenimiento CUCEI
+            Reporta CUCEI
           </Text>{' '}
         </h1>
-
+    <br/>
         <Text className={classes.description} color="dimmed">
           Una aplicación con el fin de mejorar la comunicación entre los alumnos
           y el equipo encargado del mantenimiento, para así poder reportar
